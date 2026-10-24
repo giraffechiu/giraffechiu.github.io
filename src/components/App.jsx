@@ -182,7 +182,19 @@ export default function App() {
 
       {/* 2. 背景大字浮水印 */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden px-4">
-        <h2 className="w-full text-center text-[16vw] md:text-[14vw] font-black tracking-tighter text-neutral-800 select-none opacity-50 leading-none">
+        {/* <h2 className="w-full text-center text-[16vw] md:text-[14vw] font-black tracking-tighter text-neutral-800 select-none opacity-50 leading-none"
+         style={{ fontWeight: 900, WebkitTextStroke: '10px rgba(255, 255, 255, 0.05)' }}
+        > */}
+        <h2 
+         className="w-full text-center text-[16vw] md:text-[14vw] tracking-tighter select-none leading-none opacity-50"
+         style={{ 
+           fontWeight: 400, //900最粗
+           fontFamily: 'Impact, sans-serif', // 強制指定超粗的黑體/Impact字型
+           color: 'rgba(255, 255, 255, 0.1)', // 文字內部顏色 最後一個是透明度
+           letterSpacing: '0.01em' // 手動將字母之間的間距拉開，避免黏在一起！
+           // WebkitTextStroke: '8px rgba(255, 255, 255, 0.05)' // 外框描邊
+         }}
+        >
           CRAFTER 600
         </h2>
       </div>
@@ -363,7 +375,20 @@ export default function App() {
                     className="max-w-xl pointer-events-auto"
                   >
                     <p className="text-emerald-400 font-mono text-xs md:text-sm mb-2">Industrial Grade Delta 3D Printer</p>
-                    <h3 className="text-3xl sm:text-5xl md:text-7xl text-[#8D9B9C] font-bold tracking-tight mb-4 md:mb-6">
+                    {/* <h3 className="text-3xl sm:text-5xl md:text-7xl text-[#8D9B9C] font-bold tracking-tight mb-4 md:mb-6"> */}
+                    <h3 
+                      className="text-3xl sm:text-5xl md:text-7xl text-[#8D9B9C] font-bold tracking-tight mb-4 md:mb-6"
+                      style={{ 
+                       fontWeight: 900, //900最粗
+                      //  fontFamily: 'Impact, sans-serif', // 強制指定超粗的黑體/Impact字型
+                       fontFamily: 'Arial Black, Gadget, sans-serif',
+                      //  fontFamily: '"Microsoft JhengHei", "PingFang TC", "Helvetica Neue", sans-serif',
+                      //  color: 'rgba(255, 255, 255, 0.1)', // 文字內部顏色 最後一個是透明度
+                      //  letterSpacing: '0.002em' // 手動將字母之間的間距拉開，避免黏在一起！
+                      // WebkitTextStroke: '8px rgba(255, 255, 255, 0.05)' // 外框描邊
+                      }}
+                    >
+                    
                       Precision in Motion.
                     </h3>
                     <p className="text-neutral-400 text-xs sm:text-sm md:text-base leading-relaxed">
