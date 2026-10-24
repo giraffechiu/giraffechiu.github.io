@@ -2,15 +2,13 @@ name: Deploy Astro to GitHub Pages
 
 on:
   push:
-    branches: [ master ] # 這裡對應您主要的 git 分支名稱（通常是 main 或 master）
+    branches: [ master ]
 
-# 設定 GitHub Actions 的權限
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 允許同時進行單次部署
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -33,9 +31,6 @@ jobs:
 
       - name: Build Astro site
         run: npm run build
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
