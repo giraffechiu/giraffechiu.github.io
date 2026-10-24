@@ -23,7 +23,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22 # 升級至 Node.js 22，完美避開舊版 deprecate 衝突
+          node-version: 20
           cache: npm
 
       - name: Install dependencies
@@ -31,6 +31,8 @@ jobs:
 
       - name: Build Astro site
         run: npm run build
+        env:
+          NODE_OPTIONS: "--no-deprecation" # 強制略過棄用警告，確保編譯順利通過
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
