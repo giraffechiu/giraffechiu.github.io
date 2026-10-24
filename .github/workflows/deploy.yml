@@ -2,7 +2,7 @@ name: Deploy Astro to GitHub Pages
 
 on:
   push:
-    branches: [ main ] # 這裡對應您主要的 git 分支名稱（通常是 main 或 master）
+    branches: [ master ] # 這裡對應您主要的 git 分支名稱（通常是 main 或 master）
 
 # 設定 GitHub Actions 的權限
 permissions:
