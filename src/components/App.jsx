@@ -188,10 +188,10 @@ export default function App() {
         <h2 
          className="w-full text-center text-[16vw] md:text-[14vw] tracking-tighter select-none leading-none opacity-50"
          style={{ 
-           fontWeight: 400, //900最粗
+           fontWeight: 600, //900最粗
            fontFamily: 'Impact, sans-serif', // 強制指定超粗的黑體/Impact字型
            color: 'rgba(255, 255, 255, 0.1)', // 文字內部顏色 最後一個是透明度
-           letterSpacing: '0.01em' // 手動將字母之間的間距拉開，避免黏在一起！
+           letterSpacing: '0.05em' // 手動將字母之間的間距拉開，避免黏在一起！
            // WebkitTextStroke: '8px rgba(255, 255, 255, 0.05)' // 外框描邊
          }}
         >
@@ -347,7 +347,7 @@ export default function App() {
             style={{ opacity: 0 }}
           >
             <svg className="absolute inset-0 w-full h-full pointer-events-none">
-              <line x1="49%" y1="80%" x2="40%" y2="57%" stroke="#f97316" strokeWidth="0.5" />
+              <line x1="48.5%" y1="83%" x2="40%" y2="57%" stroke="#f97316" strokeWidth="0.5" />
             </svg>
             <div className="absolute left-[35%] top-[55%] bg-neutral-900 border border-orange-500/50 px-5 py-2.5 rounded-md shadow-xl pointer-events-auto whitespace-nowrap">
               <div className="text-[10px] text-neutral-400 tracking-wider mb-0.5">噴頭組</div>
