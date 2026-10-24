@@ -1,11 +1,19 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// src/pages/index.astro
+import '../styles/global.css'; // <--- 加上這行引入 Tailwind 樣式
+import App from '../components/App.jsx';
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="zh-Hant">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/./images/3d logo_200.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>CRAFTER 600 - 3D 砌作</title>
+	</head>
+	<body class="bg-neutral-950 text-white m-0 p-0 overflow-x-hidden">
+		
+		<App client:only="react" />
+
+	</body>
+</html>
