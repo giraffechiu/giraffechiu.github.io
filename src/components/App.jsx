@@ -524,11 +524,14 @@ export default function App() {
                   </div>
 
                   <div className="w-full md:w-auto max-w-lg flex flex-col items-center text-center order-2 md:order-2 bg-neutral-950/50 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-[0.5px] border-emerald-500 shadow-2xl">
-                    <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#C5B9AC] mb-4 text-white">3d砌作</h3>
+                    {/* <h3 className="text-3xl sm:text-4xl md:text-5xl font-['Arial',sans-serif] text-[#C5B9AC] mb-4">3d砌作</h3> */}
+                    <h3 className="text-3xl sm:text-4xl md:text-5xl text-[#C5B9AC] mb-4 font-bold">
+                     <span className="font-['Arial',sans-serif]">3d</span>砌作
+                    </h3>
                     <p className="text-customText text-sm md:text-base mb-6">設計 x 製造 x 3D列印代工</p>
                     <button 
                       onClick={() => switchView('guestbook')}
-                      className="px-8 py-3 bg-white bg-[#C5B9AC] text-black text-sm md:text-base font-semibold rounded-full hover:bg-neutral-200 shadow-xl transition-all transform hover:scale-105 cursor-pointer pointer-events-auto"
+                      className="px-8 py-3 bg-[#C5B9AC] text-black text-sm md:text-base font-semibold rounded-full hover:bg-neutral-200 shadow-xl transition-all transform hover:scale-105 cursor-pointer pointer-events-auto"
                     >
                       訪客留言區
                     </button>
