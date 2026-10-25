@@ -170,7 +170,7 @@ export default function App() {
           >
             首頁導覽
           </button>
-          <span className="text-neutral-700">/</span>
+          <span className="text-customText">/</span>
           <button 
             onClick={() => switchView('guestbook')}
             className={`transition-colors cursor-pointer ${currentView === 'guestbook' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#8D9B9C] hover:text-white'}`}
@@ -182,7 +182,7 @@ export default function App() {
 
       {/* 2. 背景大字浮水印 */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden px-4">
-        {/* <h2 className="w-full text-center text-[16vw] md:text-[14vw] font-black tracking-tighter text-neutral-800 select-none opacity-50 leading-none"
+        {/* <h2 className="w-full text-center text-[16vw] md:text-[14vw] font-black tracking-tighter text-customText select-none opacity-50 leading-none"
          style={{ fontWeight: 900, WebkitTextStroke: '10px rgba(255, 255, 255, 0.05)' }}
         > */}
         <h2 
@@ -204,11 +204,11 @@ export default function App() {
         <div className="relative z-20 w-full h-full pt-28 pb-12 px-6 md:px-24 overflow-y-auto flex flex-col items-center">
           <div className="max-w-3xl w-full bg-neutral-950/90 backdrop-blur-md border border-neutral-800 rounded-xl p-6 md:p-8 shadow-2xl mt-4">
             <h3 className="text-2xl md:text-3xl font-bold text-emerald-400 mb-2">訪客留言板</h3>
-            <p className="text-neutral-400 text-xs md:text-sm mb-6">歡迎留下您對 CRAFTER 600 的寶貴意見與交流！</p>
+            <p className="text-customText text-xs md:text-sm mb-6">歡迎留下您對 CRAFTER 600 的寶貴意見與交流！</p>
 
             <form onSubmit={handleAddMessage} className="space-y-4 mb-8">
               <div>
-                <label className="block text-xs font-mono text-neutral-400 mb-1">您的稱呼 / 暱稱</label>
+                <label className="block text-xs font-mono text-customText mb-1">您的稱呼 / 暱稱</label>
                 <input 
                   type="text" 
                   value={author}
@@ -219,7 +219,7 @@ export default function App() {
                 />
               </div>
               <div>
-                <label className="block text-xs font-mono text-neutral-400 mb-1">留言內容</label>
+                <label className="block text-xs font-mono text-customText mb-1">留言內容</label>
                 <textarea 
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
@@ -238,7 +238,7 @@ export default function App() {
             </form>
 
             <div className="border-t border-neutral-800 pt-6">
-              <h4 className="text-sm font-mono text-neutral-400 mb-4 tracking-wider uppercase">歷史留言紀錄 ({messages.length})</h4>
+              <h4 className="text-sm font-mono text-customText mb-4 tracking-wider uppercase">歷史留言紀錄 ({messages.length})</h4>
               <div className="space-y-4 max-h-[35vh] overflow-y-auto pr-2">
                 {messages.map((msg) => {
                   const isMyMessage = msg.client_id === clientId;
@@ -271,7 +271,7 @@ export default function App() {
                             </button>
                             <button 
                               onClick={() => setEditingId(null)}
-                              className="px-3 py-1 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs rounded transition-colors cursor-pointer"
+                              className="px-3 py-1 bg-neutral-800 hover:bg-neutral-700 text-customText text-xs rounded transition-colors cursor-pointer"
                             >
                               取消
                             </button>
@@ -283,19 +283,19 @@ export default function App() {
                           <div className="flex justify-between items-center mb-2">
                             <span className="font-semibold text-emerald-400 text-sm">{msg.name}</span>
                             <div className="flex items-center space-x-3">
-                              <span className="text-[10px] font-mono text-neutral-500">{msg.date}</span>
+                              <span className="text-[10px] font-mono text-customText">{msg.date}</span>
                               
                               {isMyMessage && (
                                 <>
                                   <button 
                                     onClick={() => handleStartEdit(msg)}
-                                    className="text-[11px] text-neutral-400 hover:text-emerald-400 transition-colors cursor-pointer"
+                                    className="text-[11px] text-customText hover:text-emerald-400 transition-colors cursor-pointer"
                                   >
                                     編輯
                                   </button>
                                   <button 
                                     onClick={() => handleDeleteMessage(msg.id)}
-                                    className="text-[11px] text-neutral-400 hover:text-red-400 transition-colors cursor-pointer"
+                                    className="text-[11px] text-customText hover:text-red-400 transition-colors cursor-pointer"
                                   >
                                     刪除
                                   </button>
@@ -303,7 +303,7 @@ export default function App() {
                               )}
                             </div>
                           </div>
-                          <p className="text-neutral-300 text-xs md:text-sm leading-relaxed">{msg.text}</p>
+                          <p className="text-customText text-xs md:text-sm leading-relaxed">{msg.text}</p>
                         </>
                       )}
                     </div>
@@ -315,7 +315,7 @@ export default function App() {
             <div className="mt-8 text-center">
               <button 
                 onClick={() => switchView('home')}
-                className="px-6 py-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs md:text-sm font-medium rounded-full transition-colors cursor-pointer"
+                className="px-6 py-2 bg-neutral-800 hover:bg-neutral-700 text-customText text-xs md:text-sm font-medium rounded-full transition-colors cursor-pointer"
               >
                 ← 返回首頁導覽
               </button>
@@ -335,7 +335,7 @@ export default function App() {
               <line x1="53%" y1="65%" x2="68%" y2="42%" stroke="#f97316" strokeWidth="0.5" />
             </svg>
             <div className="absolute right-[26%] top-[38%] bg-neutral-900 border border-orange-500/50 px-5 py-2.5 rounded-md shadow-xl pointer-events-auto whitespace-nowrap">
-              <div className="text-[10px] text-neutral-400 tracking-wider mb-0.5">列印範圍</div>
+              <div className="text-[10px] text-customText tracking-wider mb-0.5">列印範圍</div>
               <FadeInText text="直徑 600mm × 高度 600mm" />
             </div>
           </div>
@@ -350,7 +350,7 @@ export default function App() {
               <line x1="49%" y1="80%" x2="40%" y2="57%" stroke="#f97316" strokeWidth="0.5" />
             </svg>
             <div className="absolute left-[35%] top-[55%] bg-neutral-900 border border-orange-500/50 px-5 py-2.5 rounded-md shadow-xl pointer-events-auto whitespace-nowrap">
-              <div className="text-[10px] text-neutral-400 tracking-wider mb-0.5">噴頭組</div>
+              <div className="text-[10px] text-customText tracking-wider mb-0.5">噴頭組</div>
               <FadeInText text="零間隙 × 單色 ×三色" />
             </div>
           </div>
@@ -391,7 +391,7 @@ export default function App() {
                     
                       Precision in Motion.
                     </h3>
-                    <p className="text-neutral-400 text-xs sm:text-sm md:text-base leading-relaxed">
+                    <p className="text-customText text-xs sm:text-sm md:text-base leading-relaxed">
                       CRAFTER 600專為大型工業列印與高精度結構設計，<br />
                       結合高動力驅動與高剛性碳纖維臂，大尺寸列印無極限。
                     </p>
@@ -403,17 +403,17 @@ export default function App() {
                   <div className="w-full flex flex-col md:flex-row md:justify-between md:items-center space-y-6 md:space-y-0 z-20 pointer-events-auto">
                     <div className="w-full md:w-1/2 order-1 md:order-1">
                       <h4 className="text-xl md:text-4xl font-semibold mb-3 md:mb-4 text-emerald-400">大尺寸極致結構</h4>
-                      <p className="text-neutral-400 text-xs md:text-base leading-relaxed mb-4 md:mb-6">
+                      <p className="text-customText text-xs md:text-base leading-relaxed mb-4 md:mb-6">
                       搭載高效能 Klipper 核心與雙區加熱床，超大列印空間，<br />
                       確保長時間運作下的穩定度與表面品質。
                       </p>
-                      <div className="flex space-x-12 font-mono text-xs text-neutral-300">
+                      <div className="flex space-x-12 font-mono text-xs text-customText">
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-neutral-500">BUILD VOLUME</span>
+                          <span className="block text-customText">BUILD VOLUME</span>
                           Ø600 x H600 mm
                         </div>
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-neutral-500">MOTOR DRIVE</span>
+                          <span className="block text-customText">MOTOR DRIVE</span>
                           high power motor
                         </div>
                       </div>
@@ -436,17 +436,17 @@ export default function App() {
                   <div className="w-full flex flex-col md:flex-row md:justify-between md:items-center space-y-16 md:space-y-0 z-20 pointer-events-auto">
                     <div className="w-full md:w-1/2 order-1 md:order-2 text-left md:text-right">
                       <h4 className="text-xl md:text-4xl font-semibold mb-3 md:mb-4 text-emerald-400">零間隙磁關節聯桿</h4>
-                      <p className="text-neutral-400 text-xs md:text-base leading-relaxed mb-4">
+                      <p className="text-customText text-xs md:text-base leading-relaxed mb-4">
                         採用高強度碳纖維桿搭配高磁性球頭，完美消除機械背隙，<br />
                         確保每一次高速往復列印都擁有絕對的穩定度與精準度。
                       </p>
-                      <div className="flex justify-start md:justify-end space-x-6 font-mono text-xs text-neutral-300">
+                      <div className="flex justify-start md:justify-end space-x-6 font-mono text-xs text-customText">
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-neutral-500">CONNECTION</span>
+                          <span className="block text-customText">CONNECTION</span>
                           Zero Backlash
                         </div>
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-neutral-500">STABILITY</span>
+                          <span className="block text-customText">STABILITY</span>
                           High Rigidity
                         </div>
                       </div>
@@ -478,17 +478,17 @@ export default function App() {
                   <div className="w-full flex flex-col md:flex-row md:justify-between md:items-center space-y-6 md:space-y-0 z-20 pointer-events-auto">
                     <div className="w-full md:w-1/2 order-1 md:order-1">
                       <h4 className="text-xl md:text-4xl font-semibold mb-3 md:mb-4 text-emerald-400">緊湊設計噴頭組</h4>
-                      <p className="text-neutral-400 text-xs md:text-base leading-relaxed mb-4 md:mb-6">
+                      <p className="text-customText text-xs md:text-base leading-relaxed mb-4 md:mb-6">
                         融合輕量化結構與高效散熱、千錘百鍊的噴頭組設計，<br />
                         完美對應高負載連續作業，確保長時間運轉下的出料流暢與穩定度。
                       </p>
-                      <div className="flex space-x-12 font-mono text-xs text-neutral-300">
+                      <div className="flex space-x-12 font-mono text-xs text-customText">
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-neutral-500">單色</span>
+                          <span className="block text-customText">單色</span>
                           PLA/PETG/TPU etc.
                         </div>
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-neutral-500">三色</span>
+                          <span className="block text-customText">三色</span>
                           直覺簡便的換料系統
                         </div>
                       </div>
@@ -532,7 +532,7 @@ export default function App() {
 
                   <div className="w-full md:w-auto max-w-lg flex flex-col items-center text-center order-2 md:order-2 bg-neutral-950/50 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-[0.5px] border-emerald-500 shadow-2xl">
                     <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white">3d砌作</h3>
-                    <p className="text-neutral-400 text-sm md:text-base mb-6">設計 x 製造 x 3D列印代工</p>
+                    <p className="text-customText text-sm md:text-base mb-6">設計 x 製造 x 3D列印代工</p>
                     <button 
                       onClick={() => switchView('guestbook')}
                       className="px-8 py-3 bg-white text-black text-sm md:text-base font-semibold rounded-full hover:bg-neutral-200 shadow-xl transition-all transform hover:scale-105 cursor-pointer pointer-events-auto"

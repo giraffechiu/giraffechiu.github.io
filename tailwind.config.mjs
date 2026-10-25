@@ -1,8 +1,20 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+module.exports = {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx,astro}",
+  ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        emerald: {
+          400: '#007d8a',
+          500: '#006874',
+        },
+        // 新增自訂顏色，專門給文字使用
+        customText: '#C5B9AC',
+      },
+    },
   },
   plugins: [],
 }
