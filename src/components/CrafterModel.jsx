@@ -81,11 +81,11 @@ export function CrafterModel() {
 
   return (
     <group ref={meshRef}>
-      {/* 渲染 GLB 場景，並透過 useEffect 套用自定義材質 */}
-      <primitive object={scene} scale={[0.004, 0.004, 0.004]} position={[-0.9, -3.5, 0.65]} />
+      {/* 中央背景整機3D,渲染 GLB 場景，並透過 useEffect 套用自定義材質 */}
+      <primitive object={scene} scale={[0.004, 0.004, 0.004]} position={[-0.9, -3.2, 0.65]} />
 
       {/* 對準要以圓柱體為旋轉中心來移動機器 */}
-      <mesh position={[0, -2, 0]}>
+      <mesh position={[0, -1.7, 0]}>
         <cylinderGeometry args={[1.25, 1.25, 2.5, 32, 1, true]} />
         <meshBasicMaterial 
           ref={cylinderMatRef}
@@ -98,7 +98,7 @@ export function CrafterModel() {
         />
       </mesh>
 
-      <mesh position={[0, -3, 0]}>
+      <mesh position={[0, -2.7, 0]}>
         <sphereGeometry args={[0.4, 32, 32]} />
         <meshBasicMaterial 
           ref={sphereMatRef}

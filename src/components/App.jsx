@@ -223,7 +223,7 @@ export default function App() {
                 <textarea 
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="請輸入您的建議或交流想法...(送出留言之後也可編輯或刪除喔!)"
+                  placeholder="請輸入您的建議或交流想法......(可編輯刪除)"
                   rows="3"
                   className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 resize-none"
                   required
@@ -347,7 +347,7 @@ export default function App() {
             style={{ opacity: 0 }}
           >
             <svg className="absolute inset-0 w-full h-full pointer-events-none">
-              <line x1="48.5%" y1="83%" x2="40%" y2="57%" stroke="#f97316" strokeWidth="0.5" />
+              <line x1="48.5%" y1="82%" x2="40%" y2="57%" stroke="#f97316" strokeWidth="0.5" />
             </svg>
             <div className="absolute left-[35%] top-[55%] bg-neutral-900 border border-orange-500/50 px-5 py-2.5 rounded-md shadow-xl pointer-events-auto whitespace-nowrap">
               <div className="text-[10px] text-neutral-400 tracking-wider mb-0.5">噴頭組</div>
@@ -361,13 +361,13 @@ export default function App() {
             <directionalLight position={[10, 20, 15]} intensity={1.5} />
             <Environment preset="city" />
             
-            <ScrollControls pages={5} damping={0.3}>
+            <ScrollControls pages={4.7} damping={0.3}>
               <CrafterModel />
 
               <Scroll html className="w-full">
                 
                 {/* 區段 1：首頁標題區 */}
-                <section className="h-[55vh] md:h-[60vh] w-screen flex flex-col justify-end px-9 py-3 md:p-24 pt-32 pointer-events-none">
+                <section className="h-[55vh] md:h-[75vh] w-screen flex flex-col justify-end px-9 py-3 md:p-24 pt-32 pointer-events-none">
                   <motion.div 
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -388,11 +388,12 @@ export default function App() {
                       // WebkitTextStroke: '8px rgba(255, 255, 255, 0.05)' // 外框描邊
                       }}
                     >
-                    
+                      動中之靜
                       Precision in Motion.
                     </h3>
                     <p className="text-neutral-400 text-xs sm:text-sm md:text-base leading-relaxed">
-                      CRAFTER 600專為大型工業列印與高精度結構設計，<br />
+                      CRAFTER 600是100%由3d砌作設計、製造、組裝，<br />
+                      專為工業FDM 3D列印的高精度結構設計，<br />
                       結合高動力驅動與高剛性碳纖維臂，大尺寸列印無極限。
                     </p>
                   </motion.div>
@@ -518,9 +519,9 @@ export default function App() {
                 {/* 區段 5：結語、新增照片與訪客留言按鈕 */}
                 <section className="min-h-screen md:h-screen w-screen flex flex-col md:flex-row items-center justify-center md:justify-around px-6 md:px-24 py-20 md:py-12 pointer-events-auto gap-8 md:gap-0">
                   
-                  <div className="w-full md:w-1/3 relative flex items-center order-1 md:order-1 space-y-6 md:space-y-0">
+                  <div className="w-1/2 md:w-1/4 relative flex items-center order-1 md:order-1 space-y-6 md:space-y-0">
                     <div className="grid grid-cols-1 gap-3 w-full">
-                      <div className="h-40 md:h-64 flex items-center justify-center">
+                      <div className="h-40 md:h-80 flex items-center justify-center">
                         <img 
                           src="/images/CRAFTER 600 整機.jpg" 
                           alt="CRAFTER 600 整機" 
