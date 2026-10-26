@@ -6,6 +6,8 @@ import { motion } from 'framer-motion';
 import { CrafterModel } from './CrafterModel';
 import { supabase } from './supabaseClient'; // 引入 Supabase 客戶端
 
+
+
 function FadeInText({ text }) {
   return (
     <span 
@@ -158,7 +160,7 @@ export default function App() {
             className="w-auto object-contain shrink-0" 
             style={{ height: '50px' }} 
           />
-          <h1 className="text-xs md:text-sm tracking-widest uppercase font-mono text-[#8D9B9C] hidden sm:block">
+          <h1 className="text-xs md:text-sm tracking-widest uppercase font-mono text-[#839794] hidden sm:block">
             DELTA 3D PRINTING LAB
           </h1>
         </div>
@@ -166,14 +168,14 @@ export default function App() {
         <nav className="flex items-center space-x-4 text-xs md:text-sm font-mono pointer-events-auto">
           <button 
             onClick={() => switchView('home')}
-            className={`transition-colors cursor-pointer ${currentView === 'home' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#8D9B9C] hover:text-white'}`}
+            className={`transition-colors cursor-pointer ${currentView === 'home' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#839794] hover:text-white'}`}
           >
             首頁導覽
           </button>
           <span className="text-customText">/</span>
           <button 
             onClick={() => switchView('guestbook')}
-            className={`transition-colors cursor-pointer ${currentView === 'guestbook' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#8D9B9C] hover:text-white'}`}
+            className={`transition-colors cursor-pointer ${currentView === 'guestbook' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#839794] hover:text-white'}`}
           >
             訪客留言板
           </button>
@@ -188,10 +190,10 @@ export default function App() {
         <h2 
          className="w-full text-center text-[16vw] md:text-[14vw] tracking-tighter select-none leading-none opacity-50"
          style={{ 
-           fontWeight: 400, //900最粗
+           fontWeight: 600, //900最粗
            fontFamily: 'Impact, sans-serif', // 強制指定超粗的黑體/Impact字型
            color: 'rgba(255, 255, 255, 0.1)', // 文字內部顏色 最後一個是透明度
-           letterSpacing: '0.01em' // 手動將字母之間的間距拉開，避免黏在一起！
+           letterSpacing: '0.05em' // 手動將字母之間的間距拉開，避免黏在一起！
            // WebkitTextStroke: '8px rgba(255, 255, 255, 0.05)' // 外框描邊
          }}
         >
@@ -223,7 +225,7 @@ export default function App() {
                 <textarea 
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="請輸入您的建議或交流想法...(送出留言之後也可編輯或刪除喔!)"
+                  placeholder="請輸入您的建議或交流想法......(可編輯刪除)"
                   rows="3"
                   className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 resize-none"
                   required
@@ -347,7 +349,7 @@ export default function App() {
             style={{ opacity: 0 }}
           >
             <svg className="absolute inset-0 w-full h-full pointer-events-none">
-              <line x1="49%" y1="80%" x2="40%" y2="57%" stroke="#f97316" strokeWidth="0.5" />
+              <line x1="48.5%" y1="82%" x2="40%" y2="57%" stroke="#f97316" strokeWidth="0.5" />
             </svg>
             <div className="absolute left-[35%] top-[55%] bg-neutral-900 border border-orange-500/50 px-5 py-2.5 rounded-md shadow-xl pointer-events-auto whitespace-nowrap">
               <div className="text-[10px] text-customText tracking-wider mb-0.5">噴頭組</div>
@@ -361,13 +363,13 @@ export default function App() {
             <directionalLight position={[10, 20, 15]} intensity={1.5} />
             <Environment preset="city" />
             
-            <ScrollControls pages={5} damping={0.3}>
+            <ScrollControls pages={4.7} damping={0.3}>
               <CrafterModel />
 
               <Scroll html className="w-full">
                 
                 {/* 區段 1：首頁標題區 */}
-                <section className="h-[55vh] md:h-[60vh] w-screen flex flex-col justify-end px-9 py-3 md:p-24 pt-32 pointer-events-none">
+                <section className="h-[55vh] md:h-[75vh] w-screen flex flex-col justify-end px-9 py-3 md:p-24 pt-32 pointer-events-none">
                   <motion.div 
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -375,24 +377,15 @@ export default function App() {
                     className="max-w-xl pointer-events-auto"
                   >
                     <p className="text-emerald-400 font-mono text-xs md:text-sm mb-2">Industrial Grade Delta 3D Printer</p>
-                    {/* <h3 className="text-3xl sm:text-5xl md:text-7xl text-[#8D9B9C] font-bold tracking-tight mb-4 md:mb-6"> */}
-                    <h3 
-                      className="text-3xl sm:text-5xl md:text-7xl text-[#8D9B9C] font-bold tracking-tight mb-4 md:mb-6"
-                      style={{ 
-                       fontWeight: 900, //900最粗
-                      //  fontFamily: 'Impact, sans-serif', // 強制指定超粗的黑體/Impact字型
-                       fontFamily: 'Arial Black, Gadget, sans-serif',
-                      //  fontFamily: '"Microsoft JhengHei", "PingFang TC", "Helvetica Neue", sans-serif',
-                      //  color: 'rgba(255, 255, 255, 0.1)', // 文字內部顏色 最後一個是透明度
-                      //  letterSpacing: '0.002em' // 手動將字母之間的間距拉開，避免黏在一起！
-                      // WebkitTextStroke: '8px rgba(255, 255, 255, 0.05)' // 外框描邊
-                      }}
-                    >
-                    
+                     <h3 className="text-3xl sm:text-5xl md:text-7xl text-[#839794] font-black tracking-tight mb-4 md:mb-6 [font-family:'Arial_Black',Gadget,sans-serif]">
+                      動中之靜<br />
+                      <span className="text-[#839794]/60">
                       Precision in Motion.
-                    </h3>
+                      </span>
+                     </h3>
                     <p className="text-customText text-xs sm:text-sm md:text-base leading-relaxed">
-                      CRAFTER 600專為大型工業列印與高精度結構設計，<br />
+                      CRAFTER 600是100%由3d砌作設計、製造、組裝，<br />
+                      專為工業FDM 3D列印的高精度結構設計，<br />
                       結合高動力驅動與高剛性碳纖維臂，大尺寸列印無極限。
                     </p>
                   </motion.div>
@@ -518,9 +511,9 @@ export default function App() {
                 {/* 區段 5：結語、新增照片與訪客留言按鈕 */}
                 <section className="min-h-screen md:h-screen w-screen flex flex-col md:flex-row items-center justify-center md:justify-around px-6 md:px-24 py-20 md:py-12 pointer-events-auto gap-8 md:gap-0">
                   
-                  <div className="w-full md:w-1/3 relative flex items-center order-1 md:order-1 space-y-6 md:space-y-0">
+                  <div className="w-1/2 md:w-1/4 relative flex items-center order-1 md:order-1 space-y-6 md:space-y-0">
                     <div className="grid grid-cols-1 gap-3 w-full">
-                      <div className="h-40 md:h-64 flex items-center justify-center">
+                      <div className="h-40 md:h-80 flex items-center justify-center">
                         <img 
                           src="/images/CRAFTER 600 整機.jpg" 
                           alt="CRAFTER 600 整機" 
@@ -531,11 +524,14 @@ export default function App() {
                   </div>
 
                   <div className="w-full md:w-auto max-w-lg flex flex-col items-center text-center order-2 md:order-2 bg-neutral-950/50 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-[0.5px] border-emerald-500 shadow-2xl">
-                    <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white">3d砌作</h3>
+                    {/* <h3 className="text-3xl sm:text-4xl md:text-5xl font-['Arial',sans-serif] text-[#C5B9AC] mb-4">3d砌作</h3> */}
+                    <h3 className="text-3xl sm:text-4xl md:text-5xl text-[#C5B9AC] mb-4 font-bold">
+                     <span className="font-['Arial',sans-serif]">3d</span>砌作
+                    </h3>
                     <p className="text-customText text-sm md:text-base mb-6">設計 x 製造 x 3D列印代工</p>
                     <button 
                       onClick={() => switchView('guestbook')}
-                      className="px-8 py-3 bg-white text-black text-sm md:text-base font-semibold rounded-full hover:bg-neutral-200 shadow-xl transition-all transform hover:scale-105 cursor-pointer pointer-events-auto"
+                      className="px-8 py-3 bg-[#C5B9AC] text-black text-sm md:text-base font-semibold rounded-full hover:bg-neutral-200 shadow-xl transition-all transform hover:scale-105 cursor-pointer pointer-events-auto"
                     >
                       訪客留言區
                     </button>

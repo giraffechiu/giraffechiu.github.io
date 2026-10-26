@@ -168,14 +168,14 @@ export default function App() {
         <nav className="flex items-center space-x-4 text-xs md:text-sm font-mono pointer-events-auto">
           <button 
             onClick={() => switchView('home')}
-            className={`transition-colors cursor-pointer ${currentView === 'home' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#839794] hover:text-white'}`}
+            className={`transition-colors cursor-pointer ${currentView === 'home' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#839794] hover:text-[#C5B9AC]'}`}
           >
             首頁導覽
           </button>
           <span className="text-customText">/</span>
           <button 
             onClick={() => switchView('guestbook')}
-            className={`transition-colors cursor-pointer ${currentView === 'guestbook' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#839794] hover:text-white'}`}
+            className={`transition-colors cursor-pointer ${currentView === 'guestbook' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#839794] hover:text-[#C5B9AC]'}`}
           >
             訪客留言板
           </button>
@@ -349,7 +349,7 @@ export default function App() {
             style={{ opacity: 0 }}
           >
             <svg className="absolute inset-0 w-full h-full pointer-events-none">
-              <line x1="48.5%" y1="82%" x2="40%" y2="57%" stroke="#f97316" strokeWidth="0.5" />
+              <line x1="48.5%" y1="80%" x2="40%" y2="57%" stroke="#f97316" strokeWidth="0.5" />
             </svg>
             <div className="absolute left-[35%] top-[55%] bg-neutral-900 border border-orange-500/50 px-5 py-2.5 rounded-md shadow-xl pointer-events-auto whitespace-nowrap">
               <div className="text-[10px] text-customText tracking-wider mb-0.5">噴頭組</div>
@@ -385,7 +385,7 @@ export default function App() {
                      </h3>
                     <p className="text-customText text-xs sm:text-sm md:text-base leading-relaxed">
                       CRAFTER 600是100%由3d砌作設計、製造、組裝，<br />
-                      專為工業FDM 3D列印的高精度結構設計，<br />
+                      高精度結構的工業FDM 3D列印機，<br />
                       結合高動力驅動與高剛性碳纖維臂，大尺寸列印無極限。
                     </p>
                   </motion.div>
@@ -397,7 +397,8 @@ export default function App() {
                     <div className="w-full md:w-1/2 order-1 md:order-1">
                       <h4 className="text-xl md:text-4xl font-semibold mb-3 md:mb-4 text-emerald-400">大尺寸極致結構</h4>
                       <p className="text-customText text-xs md:text-base leading-relaxed mb-4 md:mb-6">
-                      搭載高效能 Klipper 核心與雙區加熱床，超大列印空間，<br />
+                      搭載高效能 Klipper 核心與雙區加熱床，<br />
+                      超大列印空間，<br />
                       確保長時間運作下的穩定度與表面品質。
                       </p>
                       <div className="flex space-x-12 font-mono text-xs text-customText">
@@ -413,11 +414,11 @@ export default function App() {
                     </div>
 
                     <div className="w-full md:w-1/5 relative flex flex-col items-center justify-center order-2 md:order-2 mt-4 md:mt-0 md:ml-auto">
-                      <div className="w-32 md:w-full h-auto bg-neutral-900 rounded-lg overflow-hidden border border-neutral-800 pointer-events-auto shadow-2xl z-20 flex items-center justify-center">
+                      <div className="w-32 md:w-full h-auto bg-neutral-900 pointer-events-auto shadow-2xl z-20 flex items-center justify-center">
                         <img 
                           src="/images/雙區加熱大尺寸列印平台.jpg" 
                           alt="Feature Preview" 
-                          className="w-full h-full object-cover opacity-80 hover:scale-105 transition-transform duration-500"
+                          className="w-full h-full object-cover opacity-80 hover:scale-110 transition-transform duration-500 border border-neutral-800 rounded-lg"
                         />
                       </div>
                     </div>
@@ -430,8 +431,9 @@ export default function App() {
                     <div className="w-full md:w-1/2 order-1 md:order-2 text-left md:text-right">
                       <h4 className="text-xl md:text-4xl font-semibold mb-3 md:mb-4 text-emerald-400">零間隙磁關節聯桿</h4>
                       <p className="text-customText text-xs md:text-base leading-relaxed mb-4">
-                        採用高強度碳纖維桿搭配高磁性球頭，完美消除機械背隙，<br />
-                        確保每一次高速往復列印都擁有絕對的穩定度與精準度。
+                        採用高強度碳纖維桿搭配高磁性球頭，<br />
+                        完美消除機械背隙，<br />
+                        確保每一次高速往復列印都能保持精準度。
                       </p>
                       <div className="flex justify-start md:justify-end space-x-6 font-mono text-xs text-customText">
                         <div className="border-l border-emerald-500 pl-3">
@@ -451,14 +453,14 @@ export default function App() {
                           <img 
                             src="/images/零間隙磁關節聯桿1.jpg" 
                             alt="Magnetic Joint 1" 
-                            className="max-w-full max-h-full object-cover opacity-90 hover:scale-105 transition-transform duration-500 border border-neutral-800 rounded-lg"
+                            className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 border border-neutral-800 rounded-lg"
                           />
                         </div>
                         <div className="h-40 md:h-64 flex items-center justify-center">
                           <img 
                             src="/images/零間隙磁關節聯桿2.jpg" 
                             alt="Magnetic Joint 2" 
-                            className="max-w-full max-h-full object-cover opacity-90 hover:scale-105 transition-transform duration-500 border border-neutral-800 rounded-lg"
+                            className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 border border-neutral-800 rounded-lg"
                           />
                         </div>
                       </div>
@@ -472,8 +474,10 @@ export default function App() {
                     <div className="w-full md:w-1/2 order-1 md:order-1">
                       <h4 className="text-xl md:text-4xl font-semibold mb-3 md:mb-4 text-emerald-400">緊湊設計噴頭組</h4>
                       <p className="text-customText text-xs md:text-base leading-relaxed mb-4 md:mb-6">
-                        融合輕量化結構與高效散熱、千錘百鍊的噴頭組設計，<br />
-                        完美對應高負載連續作業，確保長時間運轉下的出料流暢與穩定度。
+                        融合輕量化結構與高效散熱、<br />
+                        千錘百鍊的噴頭組設計，<br />
+                        完美對應高負載連續作業，<br />
+                        確保長時間運轉下的出料流暢與穩定度。
                       </p>
                       <div className="flex space-x-12 font-mono text-xs text-customText">
                         <div className="border-l border-emerald-500 pl-3">
@@ -488,23 +492,23 @@ export default function App() {
                     </div>
 
                     <div className="w-full md:w-1/3 relative flex items-center space-x-3 order-2 md:order-2 mt-4 md:mt-0">
-                      <div className="grid grid-cols-2 gap-3 w-full">
-                        <div className="h-40 md:h-64 flex items-center justify-center">
-                          <img 
-                            src="/images/效應器單色.jpg" 
-                            alt="Magnetic Joint 1" 
-                            className="max-w-full max-h-full object-cover opacity-90 hover:scale-105 transition-transform duration-500 border border-neutral-800 rounded-lg"
-                          />
-                        </div>
-                        <div className="h-40 md:h-64 flex items-center justify-center">
-                          <img 
-                            src="/images/效應器三色.jpg" 
-                            alt="Magnetic Joint 2" 
-                            className="max-w-full max-h-full object-cover opacity-90 hover:scale-105 transition-transform border border-neutral-800 duration-500 rounded-lg"
-                          />
+                        <div className="grid grid-cols-2 gap-3 w-full">
+                          <div className="h-40 md:h-64 flex items-center justify-center relative">
+                            <img 
+                              src="/images/效應器單色.jpg" 
+                              alt="Magnetic Joint 1" 
+                              className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 border border-neutral-800 rounded-lg relative hover:z-30"
+                            />
+                          </div>
+                          <div className="h-40 md:h-64 flex items-center justify-center relative">
+                            <img 
+                              src="/images/效應器三色.jpg" 
+                              alt="Magnetic Joint 2" 
+                              className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 border border-neutral-800 rounded-lg relative hover:z-30"
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
                   </div>
                 </section>   
 
@@ -517,7 +521,7 @@ export default function App() {
                         <img 
                           src="/images/CRAFTER 600 整機.jpg" 
                           alt="CRAFTER 600 整機" 
-                          className="max-w-full max-h-full object-cover opacity-90 hover:scale-105 transition-transform duration-500 rounded-lg border border-neutral-800 shadow-2xl"
+                          className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 rounded-lg border border-neutral-800 shadow-2xl"
                         />
                       </div>
                     </div>
@@ -531,7 +535,7 @@ export default function App() {
                     <p className="text-customText text-sm md:text-base mb-6">設計 x 製造 x 3D列印代工</p>
                     <button 
                       onClick={() => switchView('guestbook')}
-                      className="px-8 py-3 bg-[#C5B9AC] text-black text-sm md:text-base font-semibold rounded-full hover:bg-neutral-200 shadow-xl transition-all transform hover:scale-105 cursor-pointer pointer-events-auto"
+                      className="px-8 py-3 bg-emerald-500 text-black text-sm md:text-base font-semibold rounded-full hover:bg-emerald-400 shadow-xl transition-all transform hover:scale-105 cursor-pointer pointer-events-auto"
                     >
                       訪客留言區
                     </button>
