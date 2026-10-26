@@ -63,20 +63,24 @@ export default function App() {
     }
   };
 
-  // 確保初次載入或切換視圖時，強制模擬對焦與點擊以啟動 3D 滾動條
+  // 確保初次載入時，強制觸發事件讓 3D 滾動條順利抓取焦點
   useEffect(() => {
     const timer = setTimeout(() => {
       window.scrollTo(0, 0);
       window.focus();
       
+      // 1. 自動觸發一次視窗的 resize 事件，強迫 Canvas 與 ScrollControls 重新計算尺寸
+      window.dispatchEvent(new Event('resize'));
+
+      // 2. 自動點擊一次畫布容器，強制啟動滾動捕捉
       const canvasContainer = document.querySelector('canvas');
       if (canvasContainer) {
         canvasContainer.click();
       }
-    }, 150);
+    }, 200); // 延遲 200 毫秒確保 DOM 與 3D 模型都已載入完畢
 
     return () => clearTimeout(timer);
-  }, [currentView, homeKey]);
+  }, [homeKey]);
 
   useEffect(() => {
     fetchMessages();
@@ -257,7 +261,7 @@ export default function App() {
             <directionalLight position={[10, 20, 15]} intensity={1.5} />
             <Environment preset="city" />
             
-            <ScrollControls pages={4.7} damping={0.3}>
+            <ScrollControls pages={4.7} damping={0.1}>
               <CrafterModel />
 
               <Scroll html className="w-full">
@@ -368,19 +372,19 @@ export default function App() {
                     <div className="w-full md:w-1/2 order-1 md:order-1">
                       <h4 className="text-xl md:text-4xl font-semibold mb-3 md:mb-4 text-emerald-400">緊湊設計噴頭組</h4>
                       <p className="text-customText text-xs md:text-base leading-relaxed mb-4 md:mb-6">
-                        融合輕量化結構與高效散熱、<br />
-                        千錘百鍊的噴頭組設計，<br />
-                        完美對應高負載連續作業，<br />
+                        千錘百鍊的模組化設計，<br />
+                        融合輕量化結構與高效散熱，<br />
+                        完美對應各種狀況需求，<br />
                         確保長時間運轉下的出料流暢與穩定度。
                       </p>
                       <div className="flex space-x-12 font-mono text-xs text-customText">
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-emerald-400">單色</span>
-                          PLA/PETG/TPU etc.
+                          <span className="block text-emerald-400">HOTEND SWITCH</span>
+                          Modular System
                         </div>
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-emerald-400">三色</span>
-                          直覺簡便的換料系統
+                          <span className="block text-emerald-400">MATERIAL</span>
+                          PLA/PETG/TPU etc.
                         </div>
                       </div>
                     </div>
