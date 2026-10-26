@@ -183,24 +183,28 @@ export default function App() {
       </div>
 
       {/* 2. 背景大字浮水印 */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden px-4">
-        {/* <h2 className="w-full text-center text-[16vw] md:text-[14vw] font-black tracking-tighter text-customText select-none opacity-50 leading-none"
-         style={{ fontWeight: 900, WebkitTextStroke: '10px rgba(255, 255, 255, 0.05)' }}
-        > */}
+      {/* <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden px-4">        
         <h2 
          className="w-full text-center text-[16vw] md:text-[14vw] tracking-tighter select-none leading-none opacity-50"
          style={{ 
-           fontWeight: 600, //900最粗
-           fontFamily: 'Impact, sans-serif', // 強制指定超粗的黑體/Impact字型
-           color: 'rgba(255, 255, 255, 0.1)', // 文字內部顏色 最後一個是透明度
-           letterSpacing: '0.05em' // 手動將字母之間的間距拉開，避免黏在一起！
-           // WebkitTextStroke: '8px rgba(255, 255, 255, 0.05)' // 外框描邊
+           fontWeight: 600,
+           fontFamily: 'Impact, sans-serif',
+           color: 'rgba(255, 255, 255, 0.1)',
+           letterSpacing: '0.05em'           
          }}
         >
           CRAFTER 600
         </h2>
+      </div> */}
+      {/* 2. 背景圖片浮水印 */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden px-4">
+        <img 
+          src="/images/CRAFTER 600.png" 
+          alt="CRAFTER 600 Watermark" 
+          className="w-full max-w-7xl object-contain opacity-15 select-none"
+        />
       </div>
-      
+
       {currentView === 'guestbook' ? (
         /* ==================== 訪客留言板新頁面 ==================== */
         <div className="relative z-20 w-full h-full pt-28 pb-12 px-6 md:px-24 overflow-y-auto flex flex-col items-center">
@@ -414,11 +418,11 @@ export default function App() {
                     </div>
 
                     <div className="w-full md:w-1/5 relative flex flex-col items-center justify-center order-2 md:order-2 mt-4 md:mt-0 md:ml-auto">
-                      <div className="w-32 md:w-full h-auto bg-neutral-900 pointer-events-auto shadow-2xl z-20 flex items-center justify-center">
+                      <div className="w-32 md:w-full flex items-center justify-center">
                         <img 
                           src="/images/雙區加熱大尺寸列印平台.jpg" 
                           alt="Feature Preview" 
-                          className="w-full h-full object-cover opacity-80 hover:scale-110 transition-transform duration-500 border border-neutral-800 rounded-lg"
+                          className="w-full h-auto object-cover opacity-80 hover:scale-110 transition-transform duration-500 border border-neutral-800 rounded-lg shadow-2xl pointer-events-auto"
                         />
                       </div>
                     </div>
@@ -513,7 +517,7 @@ export default function App() {
                 </section>   
 
                 {/* 區段 5：結語、新增照片與訪客留言按鈕 */}
-                <section className="min-h-screen md:h-screen w-screen flex flex-col md:flex-row items-center justify-center md:justify-around px-6 md:px-24 py-20 md:py-12 pointer-events-auto gap-8 md:gap-0">
+                <section className="min-h-screen md:h-screen w-screen flex flex-col md:flex-row items-center justify-center md:justify-around px-6 md:px-80 py-20 md:py-12 pointer-events-auto gap-8 md:gap-0">
                   
                   <div className="w-1/2 md:w-1/4 relative flex items-center order-1 md:order-1 space-y-6 md:space-y-0">
                     <div className="grid grid-cols-1 gap-3 w-full">
@@ -522,12 +526,24 @@ export default function App() {
                           src="/images/CRAFTER 600 整機.jpg" 
                           alt="CRAFTER 600 整機" 
                           className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 rounded-lg border border-neutral-800 shadow-2xl"
+                        />                        
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="w-1/2 md:w-1/4 relative flex items-center order-2 md:order-2 space-y-6 md:space-y-0">
+                    <div className="grid grid-cols-1 gap-3 w-full">
+                      <div className="h-40 md:h-80 flex items-center justify-center">                        
+                        <img 
+                          src="/images/CRAFTER logo.png" 
+                          alt="CRAFTER logo" 
+                          className="max-w-full max-h-full object-cover transition-transform duration-500 rounded-lg shadow-2xl"
                         />
                       </div>
                     </div>
                   </div>
 
-                  <div className="w-full md:w-auto max-w-lg flex flex-col items-center text-center order-2 md:order-2 bg-neutral-950/50 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-[0.5px] border-emerald-500 shadow-2xl">
+                  <div className="w-full md:w-auto max-w-lg flex flex-col items-center text-center order-3 md:order-3 bg-neutral-950/50 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-[0.5px] border-emerald-500 shadow-2xl">
                     {/* <h3 className="text-3xl sm:text-4xl md:text-5xl font-['Arial',sans-serif] text-[#C5B9AC] mb-4">3d砌作</h3> */}
                     <h3 className="text-3xl sm:text-4xl md:text-5xl text-[#C5B9AC] mb-4 font-bold">
                      <span className="font-['Arial',sans-serif]">3d</span>砌作
