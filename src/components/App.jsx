@@ -347,18 +347,18 @@ export default function App() {
 
                     <div className="w-full md:w-1/3 relative flex items-center space-x-3 order-2 md:order-1">
                       <div className="grid grid-cols-2 gap-3 w-full">
-                        <div className="h-40 md:h-64 flex items-center justify-center">
+                        <div className="h-40 md:h-64 flex items-center justify-center relative">
                           <img 
                             src="/images/零間隙磁關節聯桿1.jpg" 
                             alt="Magnetic Joint 1" 
-                            className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 border border-neutral-800 rounded-lg"
+                            className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 border border-neutral-800 rounded-lg relative hover:z-30"
                           />
                         </div>
-                        <div className="h-40 md:h-64 flex items-center justify-center">
+                        <div className="h-40 md:h-64 flex items-center justify-center relative">
                           <img 
                             src="/images/零間隙磁關節聯桿2.jpg" 
                             alt="Magnetic Joint 2" 
-                            className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 border border-neutral-800 rounded-lg"
+                            className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 border border-neutral-800 rounded-lg relative hover:z-30"
                           />
                         </div>
                       </div>
@@ -415,11 +415,11 @@ export default function App() {
                   
                   <div className="w-1/2 md:w-1/4 relative flex items-center order-1 md:order-1 space-y-6 md:space-y-0">
                     <div className="grid grid-cols-1 gap-3 w-full">
-                      <div className="h-40 md:h-80 flex items-center justify-center">
+                      <div className="h-40 md:h-80 flex items-center justify-center relative">
                         <img 
                           src="/images/CRAFTER 600 整機.jpg" 
                           alt="CRAFTER 600 整機" 
-                          className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 rounded-lg border border-neutral-800 shadow-2xl"
+                          className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 rounded-lg border border-neutral-800 shadow-2xl relative hover:z-30"
                         />                        
                       </div>
                     </div>
