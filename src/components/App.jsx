@@ -5,8 +5,7 @@ import { ScrollControls, Scroll, Environment } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { CrafterModel } from './CrafterModel';
 import { supabase } from './supabaseClient'; // 引入 Supabase 客戶端
-
-
+import AppGuestbook from './App-guestbook'; // 引入剛剛拆分出來的留言板元件
 
 function FadeInText({ text }) {
   return (
@@ -21,9 +20,13 @@ function FadeInText({ text }) {
 
 export default function App() {
   const [currentView, setCurrentView] = useState('home');
+  const [homeKey, setHomeKey] = useState(0); // 用來強制重新掛載首頁以確保捲動條歸零
 
   const switchView = (viewName) => {
     setCurrentView(viewName);
+    if (viewName === 'home') {
+      setHomeKey(prev => prev + 1);
+    }
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
@@ -66,7 +69,6 @@ export default function App() {
       window.scrollTo(0, 0);
       window.focus();
       
-      // 自動觸發一次頁面頂部的點擊，強迫 R3F ScrollControls 抓取滾動焦點
       const canvasContainer = document.querySelector('canvas');
       if (canvasContainer) {
         canvasContainer.click();
@@ -74,7 +76,7 @@ export default function App() {
     }, 150);
 
     return () => clearTimeout(timer);
-  }, [currentView]);
+  }, [currentView, homeKey]);
 
   useEffect(() => {
     fetchMessages();
@@ -86,7 +88,7 @@ export default function App() {
     if (!author.trim() || !content.trim()) return;
 
     const newMessage = {
-      id: Date.now(), // 用數字時間戳記作為唯一 ID
+      id: Date.now(),
       name: author.trim(),
       text: content.trim(),
       date: new Date().toISOString().split('T')[0],
@@ -103,7 +105,7 @@ export default function App() {
     } else {
       setAuthor('');
       setContent('');
-      fetchMessages(); // 重新向雲端抓取最新清單
+      fetchMessages();
     }
   };
 
@@ -153,17 +155,20 @@ export default function App() {
       
       {/* 1. 頂端全螢幕橫向滿版導覽列 (w-full) */}
       <div className="absolute top-0 left-0 w-full z-50 flex items-center justify-between px-6 md:px-12 py-1 bg-neutral-900/5 backdrop-blur-md shadow-2xl">      
-        <div className="flex items-center space-x-6 pointer-events-none">
+        <button 
+          onClick={() => switchView('home')}
+          className="flex items-center space-x-6 cursor-pointer text-left bg-transparent border-none p-0"
+        >
           <img 
             src="/images/3d logo word_500.png" 
             alt="3D Logo" 
             className="w-auto object-contain shrink-0" 
             style={{ height: '50px' }} 
           />
-          <h1 className="text-xs md:text-sm tracking-widest uppercase font-mono text-[#839794] hidden sm:block">
+          <h1 className="text-xs md:text-sm tracking-widest uppercase font-mono text-[#839794] hover:text-[#C5B9AC] transition-colors hidden sm:block">
             DELTA 3D PRINTING LAB
           </h1>
-        </div>
+        </button>
 
         <nav className="flex items-center space-x-4 text-xs md:text-sm font-mono pointer-events-auto">
           <button 
@@ -182,20 +187,6 @@ export default function App() {
         </nav>
       </div>
 
-      {/* 2. 背景大字浮水印 */}
-      {/* <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden px-4">        
-        <h2 
-         className="w-full text-center text-[16vw] md:text-[14vw] tracking-tighter select-none leading-none opacity-50"
-         style={{ 
-           fontWeight: 600,
-           fontFamily: 'Impact, sans-serif',
-           color: 'rgba(255, 255, 255, 0.1)',
-           letterSpacing: '0.05em'           
-         }}
-        >
-          CRAFTER 600
-        </h2>
-      </div> */}
       {/* 2. 背景圖片浮水印 */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden px-4">
         <img 
@@ -206,131 +197,30 @@ export default function App() {
       </div>
 
       {currentView === 'guestbook' ? (
-        /* ==================== 訪客留言板新頁面 ==================== */
-        <div className="relative z-20 w-full h-full pt-28 pb-12 px-6 md:px-24 overflow-y-auto flex flex-col items-center">
-          <div className="max-w-3xl w-full bg-neutral-950/90 backdrop-blur-md border border-neutral-800 rounded-xl p-6 md:p-8 shadow-2xl mt-4">
-            <h3 className="text-2xl md:text-3xl font-bold text-emerald-400 mb-2">訪客留言板</h3>
-            <p className="text-customText text-xs md:text-sm mb-6">歡迎留下您對 CRAFTER 600 的寶貴意見與交流！</p>
-
-            <form onSubmit={handleAddMessage} className="space-y-4 mb-8">
-              <div>
-                <label className="block text-xs font-mono text-customText mb-1">您的稱呼 / 暱稱</label>
-                <input 
-                  type="text" 
-                  value={author}
-                  onChange={(e) => setAuthor(e.target.value)}
-                  placeholder="例如：Maker John"
-                  className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-mono text-customText mb-1">留言內容</label>
-                <textarea 
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="請輸入您的建議或交流想法......(可編輯刪除)"
-                  rows="3"
-                  className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 resize-none"
-                  required
-                />
-              </div>
-              <button 
-                type="submit"
-                className="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-semibold rounded-lg transition-colors cursor-pointer"
-              >
-                送出留言
-              </button>
-            </form>
-
-            <div className="border-t border-neutral-800 pt-6">
-              <h4 className="text-sm font-mono text-customText mb-4 tracking-wider uppercase">歷史留言紀錄 ({messages.length})</h4>
-              <div className="space-y-4 max-h-[35vh] overflow-y-auto pr-2">
-                {messages.map((msg) => {
-                  const isMyMessage = msg.client_id === clientId;
-
-                  return (
-                    <div key={msg.id} className="bg-neutral-900 border border-neutral-800/80 rounded-lg p-4">
-                      {editingId === msg.id ? (
-                        /* 編輯模式 */
-                        <div className="space-y-3">
-                          <input 
-                            type="text" 
-                            value={editAuthor}
-                            onChange={(e) => setEditAuthor(e.target.value)}
-                            className="w-full bg-neutral-950 border border-neutral-700 rounded px-3 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500"
-                            placeholder="修改稱呼"
-                          />
-                          <textarea 
-                            value={editContent}
-                            onChange={(e) => setEditContent(e.target.value)}
-                            rows="2"
-                            className="w-full bg-neutral-950 border border-neutral-700 rounded px-3 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 resize-none"
-                            placeholder="修改留言內容"
-                          />
-                          <div className="flex space-x-2 justify-end">
-                            <button 
-                              onClick={() => handleSaveEdit(msg.id)}
-                              className="px-3 py-1 bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-semibold rounded transition-colors cursor-pointer"
-                            >
-                              儲存
-                            </button>
-                            <button 
-                              onClick={() => setEditingId(null)}
-                              className="px-3 py-1 bg-neutral-800 hover:bg-neutral-700 text-customText text-xs rounded transition-colors cursor-pointer"
-                            >
-                              取消
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        /* 一般顯示模式 */
-                        <>
-                          <div className="flex justify-between items-center mb-2">
-                            <span className="font-semibold text-emerald-400 text-sm">{msg.name}</span>
-                            <div className="flex items-center space-x-3">
-                              <span className="text-[10px] font-mono text-customText">{msg.date}</span>
-                              
-                              {isMyMessage && (
-                                <>
-                                  <button 
-                                    onClick={() => handleStartEdit(msg)}
-                                    className="text-[11px] text-customText hover:text-emerald-400 transition-colors cursor-pointer"
-                                  >
-                                    編輯
-                                  </button>
-                                  <button 
-                                    onClick={() => handleDeleteMessage(msg.id)}
-                                    className="text-[11px] text-customText hover:text-red-400 transition-colors cursor-pointer"
-                                  >
-                                    刪除
-                                  </button>
-                                </>
-                              )}
-                            </div>
-                          </div>
-                          <p className="text-customText text-xs md:text-sm leading-relaxed">{msg.text}</p>
-                        </>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="mt-8 text-center">
-              <button 
-                onClick={() => switchView('home')}
-                className="px-6 py-2 bg-neutral-800 hover:bg-neutral-700 text-customText text-xs md:text-sm font-medium rounded-full transition-colors cursor-pointer"
-              >
-                ← 返回首頁導覽
-              </button>
-            </div>
-          </div>
-        </div>
+        /* ==================== 訪客留言板獨立元件 ==================== */
+        <AppGuestbook 
+          messages={messages}
+          author={author}
+          setAuthor={setAuthor}
+          content={content}
+          setContent={setContent}
+          handleAddMessage={handleAddMessage}
+          editingId={editingId}
+          editAuthor={editAuthor}
+          setEditAuthor={setEditAuthor}
+          editContent={editContent}
+          setEditContent={setEditContent}
+          handleStartEdit={handleStartEdit}
+          handleSaveEdit={handleSaveEdit}
+          setEditingId={setEditingId}
+          handleDeleteMessage={handleDeleteMessage}
+          clientId={clientId}
+          switchView={switchView}
+        />
       ) : (
         /* ==================== 首頁 3D 滾動導覽頁面 ==================== */
-        <>
+        <div key={homeKey} className="w-full h-full">
+          
           {/* === 區段 2 的固定標示與連接線 === */}
           <div 
             id="cylinder-label"
@@ -407,12 +297,12 @@ export default function App() {
                       </p>
                       <div className="flex space-x-12 font-mono text-xs text-customText">
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-customText">BUILD VOLUME</span>
+                          <span className="block text-emerald-400">BUILD VOLUME</span>
                           Ø600 x H600 mm
                         </div>
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-customText">MOTOR DRIVE</span>
-                          high power motor
+                          <span className="block text-emerald-400">CORE SYSTEM</span>
+                          Klipper
                         </div>
                       </div>
                     </div>
@@ -441,12 +331,12 @@ export default function App() {
                       </p>
                       <div className="flex justify-start md:justify-end space-x-6 font-mono text-xs text-customText">
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-customText">CONNECTION</span>
+                          <span className="block text-emerald-400">CONNECTION</span>
                           Zero Backlash
                         </div>
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-customText">STABILITY</span>
-                          High Rigidity
+                          <span className="block text-emerald-400">ROD RIGIDITY</span>
+                          Carbon Fiber
                         </div>
                       </div>
                     </div>
@@ -485,11 +375,11 @@ export default function App() {
                       </p>
                       <div className="flex space-x-12 font-mono text-xs text-customText">
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-customText">單色</span>
+                          <span className="block text-emerald-400">單色</span>
                           PLA/PETG/TPU etc.
                         </div>
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-customText">三色</span>
+                          <span className="block text-emerald-400">三色</span>
                           直覺簡便的換料系統
                         </div>
                       </div>
@@ -544,14 +434,13 @@ export default function App() {
                   </div>
 
                   <div className="w-full md:w-auto max-w-lg flex flex-col items-center text-center order-3 md:order-3 bg-neutral-950/50 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-[0.5px] border-emerald-500 shadow-2xl">
-                    {/* <h3 className="text-3xl sm:text-4xl md:text-5xl font-['Arial',sans-serif] text-[#C5B9AC] mb-4">3d砌作</h3> */}
                     <h3 className="text-3xl sm:text-4xl md:text-5xl text-[#C5B9AC] mb-4 font-bold">
                      <span className="font-['Arial',sans-serif]">3d</span>砌作
                     </h3>
                     <p className="text-customText text-sm md:text-base mb-6">設計 x 製造 x 3D列印代工</p>
                     <button 
                       onClick={() => switchView('guestbook')}
-                      className="px-8 py-3 bg-emerald-500 text-black text-sm md:text-base font-semibold rounded-full hover:bg-emerald-400 shadow-xl transition-all transform hover:scale-105 cursor-pointer pointer-events-auto"
+                      className="px-8 py-3 bg-emerald-500 text-black text-sm md:text-base font-semibold rounded-full hover:bg-emerald-400 hover:text-[#C5B9AC] shadow-xl transition-all transform hover:scale-105 cursor-pointer pointer-events-auto"
                     >
                       訪客留言區
                     </button>
@@ -562,7 +451,7 @@ export default function App() {
               </Scroll>
             </ScrollControls>
           </Canvas>
-        </>
+        </div>
       )}
     </div>
   );
