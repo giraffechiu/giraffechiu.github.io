@@ -12,7 +12,7 @@ module.exports = {
           500: '#006874',
         },
         // 新增自訂顏色，專門給文字使用
-        customText: '#C5B9AC',
+        customText: '#e6ddd2',
       },
     },
   },

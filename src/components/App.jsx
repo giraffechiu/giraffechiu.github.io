@@ -5,13 +5,15 @@ import { ScrollControls, Scroll, Environment } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { CrafterModel } from './CrafterModel';
 import { supabase } from './supabaseClient'; // 引入 Supabase 客戶端
-import AppGuestbook from './App-guestbook'; // 引入剛剛拆分出來的留言板元件
+import AppGuestbook from './App-guestbook'; // 引入留言板
+import AppAbout from './App-about'; // 或 './App-關於3d砌作'
+import AppOrder from './App-order';
 
 function FadeInText({ text }) {
   return (
     <span 
       style={{ fontFamily: '"Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif' }} 
-      className="text-orange-400 font-bold tracking-wider inline-block"
+      className="text-[#eaa486] font-bold tracking-wider inline-block"
     >
       {text}
     </span>
@@ -155,7 +157,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative w-full h-screen bg-neutral-950 text-white overflow-x-hidden font-sans">
+    <div className="relative w-full h-screen bg-neutral-950 text-[#839794] overflow-x-hidden font-sans">
       
       {/* 1. 頂端全螢幕橫向滿版導覽列 (w-full) */}
       <div className="absolute top-0 left-0 w-full z-50 flex items-center justify-between px-6 md:px-12 py-1 bg-neutral-900/5 backdrop-blur-md shadow-2xl">      
@@ -180,6 +182,20 @@ export default function App() {
             className={`transition-colors cursor-pointer ${currentView === 'home' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#839794] hover:text-[#C5B9AC]'}`}
           >
             首頁導覽
+          </button>
+          <span className="text-customText">/</span>
+          <button 
+            onClick={() => switchView('about')}
+            className={`transition-colors cursor-pointer ${currentView === 'about' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#839794] hover:text-[#C5B9AC]'}`}
+          >
+            關於3d砌作
+          </button>
+          <span className="text-customText">/</span>
+          <button 
+            onClick={() => switchView('order')}
+            className={`transition-colors cursor-pointer ${currentView === 'order' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#839794] hover:text-[#C5B9AC]'}`}
+          >
+            訂單系統
           </button>
           <span className="text-customText">/</span>
           <button 
@@ -221,7 +237,11 @@ export default function App() {
           clientId={clientId}
           switchView={switchView}
         />
-      ) : (
+        ) : currentView === 'about' ? (
+        <AppAbout switchView={switchView} />
+        ) : currentView === 'order' ? (
+        <AppOrder switchView={switchView} />
+        ) : (
         /* ==================== 首頁 3D 滾動導覽頁面 ==================== */
         <div key={homeKey} className="w-full h-full">
           

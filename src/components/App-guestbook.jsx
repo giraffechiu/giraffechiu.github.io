@@ -72,14 +72,14 @@ export default function AppGuestbook({
                         type="text" 
                         value={editAuthor}
                         onChange={(e) => setEditAuthor(e.target.value)}
-                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-3 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-3 py-1.5 text-xs text-[#839794] focus:outline-none focus:border-emerald-500"
                         placeholder="修改稱呼"
                       />
                       <textarea 
                         value={editContent}
                         onChange={(e) => setEditContent(e.target.value)}
                         rows="2"
-                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-3 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 resize-none"
+                        className="w-full bg-neutral-950 border border-neutral-700 rounded px-3 py-1.5 text-xs text-[#839794] focus:outline-none focus:border-emerald-500 resize-none"
                         placeholder="修改留言內容"
                       />
                       <div className="flex space-x-2 justify-end">

@@ -11,7 +11,7 @@ function FadeInText({ text }) {
   return (
     <span 
       style={{ fontFamily: '"Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif' }} 
-      className="text-orange-400 font-bold tracking-wider inline-block"
+      className="text-[#eaa486] font-bold tracking-wider inline-block"
     >
       {text}
     </span>
@@ -151,7 +151,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative w-full h-screen bg-neutral-950 text-white overflow-x-hidden font-sans">
+    <div className="relative w-full h-screen bg-neutral-950 text-[#839794] overflow-x-hidden font-sans">
       
       {/* 1. 頂端全螢幕橫向滿版導覽列 (w-full) */}
       <div className="absolute top-0 left-0 w-full z-50 flex items-center justify-between px-6 md:px-12 py-1 bg-neutral-900/5 backdrop-blur-md shadow-2xl">      
