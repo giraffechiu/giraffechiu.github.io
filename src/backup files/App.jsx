@@ -5,7 +5,9 @@ import { ScrollControls, Scroll, Environment } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { CrafterModel } from './CrafterModel';
 import { supabase } from './supabaseClient'; // 引入 Supabase 客戶端
-import AppGuestbook from './App-guestbook'; // 引入剛剛拆分出來的留言板元件
+import AppGuestbook from './App-guestbook'; // 引入留言板
+import AppAbout from './App-about'; // 或 './App-關於3d砌作'
+import AppOrder from './App-order';
 
 function FadeInText({ text }) {
   return (
@@ -63,20 +65,24 @@ export default function App() {
     }
   };
 
-  // 確保初次載入或切換視圖時，強制模擬對焦與點擊以啟動 3D 滾動條
+  // 確保初次載入時，強制觸發事件讓 3D 滾動條順利抓取焦點
   useEffect(() => {
     const timer = setTimeout(() => {
       window.scrollTo(0, 0);
       window.focus();
       
+      // 1. 自動觸發一次視窗的 resize 事件，強迫 Canvas 與 ScrollControls 重新計算尺寸
+      window.dispatchEvent(new Event('resize'));
+
+      // 2. 自動點擊一次畫布容器，強制啟動滾動捕捉
       const canvasContainer = document.querySelector('canvas');
       if (canvasContainer) {
         canvasContainer.click();
       }
-    }, 150);
+    }, 200); // 延遲 200 毫秒確保 DOM 與 3D 模型都已載入完畢
 
     return () => clearTimeout(timer);
-  }, [currentView, homeKey]);
+  }, [homeKey]);
 
   useEffect(() => {
     fetchMessages();
@@ -179,6 +185,20 @@ export default function App() {
           </button>
           <span className="text-customText">/</span>
           <button 
+            onClick={() => switchView('about')}
+            className={`transition-colors cursor-pointer ${currentView === 'about' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#839794] hover:text-[#C5B9AC]'}`}
+          >
+            關於3d砌作
+          </button>
+          <span className="text-customText">/</span>
+          <button 
+            onClick={() => switchView('order')}
+            className={`transition-colors cursor-pointer ${currentView === 'order' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#839794] hover:text-[#C5B9AC]'}`}
+          >
+            訂單系統
+          </button>
+          <span className="text-customText">/</span>
+          <button 
             onClick={() => switchView('guestbook')}
             className={`transition-colors cursor-pointer ${currentView === 'guestbook' ? 'text-emerald-400 underline underline-offset-4' : 'text-[#839794] hover:text-[#C5B9AC]'}`}
           >
@@ -217,7 +237,11 @@ export default function App() {
           clientId={clientId}
           switchView={switchView}
         />
-      ) : (
+        ) : currentView === 'about' ? (
+        <AppAbout switchView={switchView} />
+        ) : currentView === 'order' ? (
+        <AppOrder switchView={switchView} />
+        ) : (
         /* ==================== 首頁 3D 滾動導覽頁面 ==================== */
         <div key={homeKey} className="w-full h-full">
           
@@ -257,7 +281,7 @@ export default function App() {
             <directionalLight position={[10, 20, 15]} intensity={1.5} />
             <Environment preset="city" />
             
-            <ScrollControls pages={4.7} damping={0.3}>
+            <ScrollControls pages={4.7} damping={0.1}>
               <CrafterModel />
 
               <Scroll html className="w-full">
@@ -301,8 +325,8 @@ export default function App() {
                           Ø600 x H600 mm
                         </div>
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-emerald-400">MOTOR DRIVE</span>
-                          high power motor
+                          <span className="block text-emerald-400">CORE SYSTEM</span>
+                          Klipper
                         </div>
                       </div>
                     </div>
@@ -335,26 +359,26 @@ export default function App() {
                           Zero Backlash
                         </div>
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-emerald-400">STABILITY</span>
-                          High Rigidity
+                          <span className="block text-emerald-400">ROD RIGIDITY</span>
+                          Carbon Fiber
                         </div>
                       </div>
                     </div>
 
                     <div className="w-full md:w-1/3 relative flex items-center space-x-3 order-2 md:order-1">
                       <div className="grid grid-cols-2 gap-3 w-full">
-                        <div className="h-40 md:h-64 flex items-center justify-center">
+                        <div className="h-40 md:h-64 flex items-center justify-center relative">
                           <img 
                             src="/images/零間隙磁關節聯桿1.jpg" 
                             alt="Magnetic Joint 1" 
-                            className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 border border-neutral-800 rounded-lg"
+                            className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 border border-neutral-800 rounded-lg relative hover:z-30"
                           />
                         </div>
-                        <div className="h-40 md:h-64 flex items-center justify-center">
+                        <div className="h-40 md:h-64 flex items-center justify-center relative">
                           <img 
                             src="/images/零間隙磁關節聯桿2.jpg" 
                             alt="Magnetic Joint 2" 
-                            className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 border border-neutral-800 rounded-lg"
+                            className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 border border-neutral-800 rounded-lg relative hover:z-30"
                           />
                         </div>
                       </div>
@@ -368,19 +392,19 @@ export default function App() {
                     <div className="w-full md:w-1/2 order-1 md:order-1">
                       <h4 className="text-xl md:text-4xl font-semibold mb-3 md:mb-4 text-emerald-400">緊湊設計噴頭組</h4>
                       <p className="text-customText text-xs md:text-base leading-relaxed mb-4 md:mb-6">
-                        融合輕量化結構與高效散熱、<br />
-                        千錘百鍊的噴頭組設計，<br />
-                        完美對應高負載連續作業，<br />
+                        千錘百鍊的模組化設計，<br />
+                        融合輕量化結構與高效散熱，<br />
+                        完美對應各種狀況需求，<br />
                         確保長時間運轉下的出料流暢與穩定度。
                       </p>
                       <div className="flex space-x-12 font-mono text-xs text-customText">
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-emerald-400">單色</span>
-                          PLA/PETG/TPU etc.
+                          <span className="block text-emerald-400">HOTEND SWITCH</span>
+                          Modular System
                         </div>
                         <div className="border-l border-emerald-500 pl-3">
-                          <span className="block text-emerald-400">三色</span>
-                          直覺簡便的換料系統
+                          <span className="block text-emerald-400">MATERIAL</span>
+                          PLA/PETG/TPU etc.
                         </div>
                       </div>
                     </div>
@@ -411,11 +435,11 @@ export default function App() {
                   
                   <div className="w-1/2 md:w-1/4 relative flex items-center order-1 md:order-1 space-y-6 md:space-y-0">
                     <div className="grid grid-cols-1 gap-3 w-full">
-                      <div className="h-40 md:h-80 flex items-center justify-center">
+                      <div className="h-40 md:h-80 flex items-center justify-center relative">
                         <img 
                           src="/images/CRAFTER 600 整機.jpg" 
                           alt="CRAFTER 600 整機" 
-                          className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 rounded-lg border border-neutral-800 shadow-2xl"
+                          className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 rounded-lg border border-neutral-800 shadow-2xl relative hover:z-30"
                         />                        
                       </div>
                     </div>

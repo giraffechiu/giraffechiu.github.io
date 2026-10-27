@@ -12,9 +12,7 @@ export default function AppAbout({ switchView }) {
         <div className="border-b border-neutral-800 pb-6 text-center md:text-left">
           <span className="text-emerald-400 font-mono text-xs tracking-widest uppercase block mb-1">
             ABOUT 3D CRAFTING
-          </span>
-          {/* <h2 className="text-3xl md:text-4xl font-bold text-emerald-400 tracking-tight">
-            關於 <span className="text-[#839794]">3d砌作</span> */}
+          </span>          
           <h2 className="text-3xl md:text-4xl font-bold text-[#839794] tracking-tight">3d砌作
           </h2>
           <p className="text-customText text-sm md:text-base mt-3 leading-relaxed">

@@ -78,7 +78,7 @@ export default function AppOrder({ switchView }) {
       .from('orders')
       .select('order_no, name, phone, material_type, file_name, status, created_at')
       .order('id', { ascending: false })
-      .limit(15);
+      .limit(5);
 
     const { count, error: countError } = await supabase
       .from('orders')
@@ -564,7 +564,7 @@ export default function AppOrder({ switchView }) {
         {activeTab === 'history' && (
           <div className="space-y-4">
             <div className="flex justify-between items-center text-xs text-[#839794] font-mono mb-2">
-              <span>近期 15 筆估價與排單動態</span>
+              <span>近期 5 筆估價與排單動態</span>
               <span>基於隱私考量，個人資料皆已加密處理</span>
             </div>
 

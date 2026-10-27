@@ -34,7 +34,7 @@ export default function AppGuestbook({
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
               placeholder="例如：Maker John"
-              className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-2.5 text-sm text-[#839794] focus:outline-none focus:border-emerald-500"
+              className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-2.5 text-sm text-customText placeholder:opacity-30 focus:outline-none focus:border-emerald-500"
               required
             />
           </div>
@@ -45,7 +45,7 @@ export default function AppGuestbook({
               onChange={(e) => setContent(e.target.value)}
               placeholder="請輸入您的建議或交流想法......(可編輯刪除)"
               rows="3"
-              className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-2.5 text-sm text-[#839794] focus:outline-none focus:border-emerald-500 resize-none"
+              className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-2.5 text-sm text-customText placeholder:opacity-30 focus:outline-none focus:border-emerald-500 resize-none"
               required
             />
           </div>
