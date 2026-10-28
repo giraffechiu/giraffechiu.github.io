@@ -13,7 +13,7 @@ const MATERIALS = [
     name: 'PLA 高精度環保線材',
     costPerGram: 2.5,
     description: '表面光潔、極低收縮率，適合原型外殼與機構驗證',
-    colors: ['太空灰','極光白','暗夜黑','工業黃','明亮橙'],
+    colors: ['純白','太空灰','暗夜黑','工業黃','明亮橙'],
     // textColor: 'text-highlight', // 也可直接在這裡指定 Tailwind 類別
   },
   {
@@ -45,11 +45,23 @@ const PRESET_MODELS = [
   { name: '網站測試用模型', path: './models/website3dtest.stl' },
 ];
 
+// 
 function calculateQuote(analysis, materialId, infill, layerHeight, quantity) {
   const material = MATERIALS.find(m => m.id === materialId) || MATERIALS[0];
   const density = 1.25;
   const infillRatio = infill / 100;
-  const effectiveVolume = analysis.volumeCm3 * (0.25 + 0.75 * infillRatio);
+
+  // 1. 計算 SA/V 比率並轉換為動態外殼佔比 (shellFactor)
+  // 假設平均等效外殼厚度為 0.15 cm (1.5mm)，涵蓋外壁與頂底層
+  const saRatio = analysis.surfaceAreaCm2 / Math.max(0.01, analysis.volumeCm3);
+  const calculatedShellFactor = saRatio * 0.15;
+  
+  // 安全限制：外殼佔比最少 5%，最多 85%，防止極端形狀失真
+  const shellFactor = Math.max(0.05, Math.min(0.85, calculatedShellFactor));
+
+  // 2. 計算有效體積：動態外殼體積 + 剩餘內部空間的填充用料
+  const effectiveVolume = analysis.volumeCm3 * (shellFactor + (1 - shellFactor) * infillRatio);
+  
   const estimatedWeightGrams = Math.max(5, Math.round(effectiveVolume * density * 10) / 10);
 
   const rawCost = estimatedWeightGrams * material.costPerGram;
@@ -68,6 +80,8 @@ function calculateQuote(analysis, materialId, infill, layerHeight, quantity) {
   const discountAmount = Math.round(subtotal * discountRate);
   const totalPrice = subtotal - discountAmount;
   const estimatedLeadDays = Math.max(1, Math.ceil((estimatedWeightGrams * quantity) / 500));
+  const debugShellFactor = Math.round(shellFactor * 100) / 100;
+  
 
   return {
     estimatedWeightGrams,
@@ -77,6 +91,8 @@ function calculateQuote(analysis, materialId, infill, layerHeight, quantity) {
     discountAmount,
     totalPrice,
     estimatedLeadDays,
+    // 額外附上計算出的外殼係數，方便在前端面板或除錯時觀察
+    debugShellFactor,
   };
 }
 
@@ -352,6 +368,9 @@ export default function AppOrder({ switchView }) {
   };
 
   const selectedMaterial = MATERIALS.find((m) => m.id === selectedMaterialId) || MATERIALS[0];
+  
+  // 💡 在這裡即時統一調用報價函數，確保整個元件都能安全共用最新計算結果
+  const liveQuote = analysis ? calculateQuote(analysis, selectedMaterialId, infill, layerHeight, quantity) : null;
 
   return (
     <div className="relative z-20 w-full h-full pt-24 pb-16 px-4 md:px-12 overflow-y-auto flex flex-col items-center">
@@ -369,7 +388,7 @@ export default function AppOrder({ switchView }) {
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-neutral-800 pb-3 gap-4">
           <div className="flex gap-6 font-mono text-xs md:text-sm">
-            <button onClick={() => setActiveTab('create')} className={`pb-1 cursor-pointer border-b-2 ${activeTab === 'create' ? 'border-emerald-400 text-emerald-400 font-bold' : 'border-transparent text-[#839794]'}`}>3D預覽與線上估價下單</button>
+            <button onClick={() => setActiveTab('create')} className={`pb-1 cursor-pointer border-b-2 ${activeTab === 'create' ? 'border-emerald-400 text-emerald-400 font-bold' : 'border-transparent text-[#839794]'}`}>3D預覽即時估價下單</button>
             <button onClick={() => setActiveTab('search')} className={`pb-1 cursor-pointer border-b-2 ${activeTab === 'search' ? 'border-emerald-400 text-emerald-400 font-bold' : 'border-transparent text-[#839794]'}`}>訂單處理進度查詢</button>
             <button onClick={() => setActiveTab('history')} className={`pb-1 cursor-pointer border-b-2 ${activeTab === 'history' ? 'border-emerald-400 text-emerald-400 font-bold' : 'border-transparent text-[#839794]'}`}>即時排單看板</button>
           </div>
@@ -497,26 +516,42 @@ export default function AppOrder({ switchView }) {
                     </div>
                   </div>
 
+                  
+
                   {analysis && (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-                        <span className="block text-[11px] font-mono text-customText uppercase">尺寸 (X×Y×Z)</span>
-                        <span className="text-sm font-bold text-customText font-mono">{analysis.dimensions.x}×{analysis.dimensions.y}×{analysis.dimensions.z} mm</span>
-                      </div>
-                      <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-                        <span className="block text-[11px] font-mono text-customText uppercase">實體積 (Volume)</span>
-                        <span className="text-sm font-bold text-customText font-mono">{analysis.volumeCm3.toLocaleString()} cm³</span>
-                      </div>
-                      <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-                        <span className="block text-[11px] font-mono text-customText uppercase">表面積 (Surface)</span>
-                        <span className="text-sm font-bold text-customText font-mono">{analysis.surfaceAreaCm2.toLocaleString()} cm²</span>
-                      </div>
-                      <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-                        <span className="block text-[11px] font-mono text-customText uppercase">面數 (Triangles)</span>
-                        <span className="text-sm font-bold text-customText font-mono">{analysis.triangleCount.toLocaleString()}</span>
-                      </div>
-                    </div>
-                  )}
+  <div className="flex flex-col gap-3">
+    {/* 上方 4 個主要的數據方塊 */}
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
+        <span className="block text-[11px] font-mono text-customText uppercase">尺寸 (X×Y×Z)</span>
+        <span className="text-sm font-bold text-customText font-mono">{analysis.dimensions.x}×{analysis.dimensions.y}×{analysis.dimensions.z} mm</span>
+      </div>
+      <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
+        <span className="block text-[11px] font-mono text-customText uppercase">實體積 (Volume)</span>
+        <span className="text-sm font-bold text-customText font-mono">{analysis.volumeCm3.toLocaleString()} cm³</span>
+      </div>
+      <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
+        <span className="block text-[11px] font-mono text-customText uppercase">表面積 (Surface)</span>
+        <span className="text-sm font-bold text-customText font-mono">{analysis.surfaceAreaCm2.toLocaleString()} cm²</span>
+      </div>
+      <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
+        <span className="block text-[11px] font-mono text-customText uppercase">面數 (Triangles)</span>
+        <span className="text-sm font-bold text-customText font-mono">{analysis.triangleCount.toLocaleString()}</span>
+      </div>
+    </div>
+
+    {/* 💡 模型複雜度獨立拉出來放在下方，使用 w-full 佔滿整行並水平置中 */}
+    {liveQuote && (
+      <div className="w-full bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3.5 flex justify-center items-center gap-3">
+        <span className="text-sm font-bold text-logocolor font-mono">模型複雜度：</span>
+        {/* 模型複雜度=（SA/V 結構外殼佔比）： */}
+        <span className="font-mono font-bold text-cyan-400 text-sm">
+          {Math.round(liveQuote.debugShellFactor * 100)}%
+        </span>
+      </div>
+    )}
+  </div>
+)}
                 </div>
 
                 <div className="lg:col-span-5 flex flex-col justify-between gap-5 bg-[#101b19]/90 p-5 rounded-xl border border-[#2d423e]">
@@ -595,7 +630,7 @@ export default function AppOrder({ switchView }) {
                       const rawTotalPrice = quote?.totalPrice || Math.round(displayWeight * quantity * costPerGram);
                       const displayTotalPrice = Math.max(200, rawTotalPrice); 
                       const displayLeadDays = quote?.estimatedLeadDays || 3;
-
+                      
                       return (
                         <div className="pt-0 space-y-3">
                           <div className="space-y-1 text-xs text-customText">
