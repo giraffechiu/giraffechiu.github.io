@@ -13,7 +13,7 @@ function FadeInText({ text }) {
   return (
     <span 
       style={{ fontFamily: '"Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif' }} 
-      className="text-[#eaa486] font-bold tracking-wider inline-block"
+      className="text-highlight font-bold tracking-wider inline-block"
     >
       {text}
     </span>
@@ -67,6 +67,8 @@ export default function App() {
 
   // 確保初次載入時，強制觸發事件讓 3D 滾動條順利抓取焦點
   useEffect(() => {
+    // const modelPath = `${import.meta.env.BASE_URL}models/website3dtest.stl`;
+
     const timer = setTimeout(() => {
       window.scrollTo(0, 0);
       window.focus();

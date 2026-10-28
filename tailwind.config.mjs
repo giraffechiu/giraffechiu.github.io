@@ -11,10 +11,17 @@ module.exports = {
           400: '#007d8a',
           500: '#006874',
         },
+        amber: {
+          400: '#eaa486',          
+        },        
         // 新增自訂顏色，專門給文字使用
-        customText: '#e6ddd2',
+        customText: '#c5b9ac', // #e6ddd2
+        highlight: '#eaa486',
+        logocolor: '#839794',
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar'),
+  ],
 }

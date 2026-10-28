@@ -13,10 +13,10 @@ export default function AppAbout({ switchView }) {
           <span className="text-emerald-400 font-mono text-xs tracking-widest uppercase block mb-1">
             ABOUT 3D CRAFTING
           </span>          
-          <h2 className="text-3xl md:text-4xl font-bold text-[#839794] tracking-tight">3d砌作
+          <h2 className="text-3xl md:text-4xl font-bold text-logocolor tracking-tight">3d砌作
           </h2>
           <p className="text-customText text-sm md:text-base mt-3 leading-relaxed">
-            我們是以 <span className="text-[#eaa486] font-medium">FDM 3D 列印</span> 為基礎的設計及製造工作室。
+            我們是以 <span className="text-highlight font-medium">FDM 3D 列印</span> 為基礎的設計及製造工作室。
           </p>
         </div>
 
@@ -66,7 +66,7 @@ export default function AppAbout({ switchView }) {
               <h4 className="text-[#839794] font-bold text-base mb-2">3D 列印代工 / 打樣</h4>
               <p className="text-customText text-xs leading-relaxed">
                 硬質與軟質材料大尺寸列印打樣。<br />
-                <span className="text-[#eaa486] font-mono">硬質 $200 起 / 軟質 $300 起</span>
+                <span className="text-highlight font-mono">硬質 $200 起 / 軟質 $300 起</span>
               </p>
             </div>
           </div>
@@ -98,11 +98,11 @@ export default function AppAbout({ switchView }) {
                 <ul className="text-xs text-customText space-y-2 pl-2">
                   <li className="flex items-start gap-2">
                     <span className="text-emerald-400 font-bold">•</span>
-                    <span><strong className="text-[#eaa486]">高強度 PLA：</strong> 韌性接近 ABS，提供多款顏色選擇。</span>
+                    <span><strong className="text-highlight">高強度 PLA：</strong> 韌性接近 ABS，提供多款顏色選擇。</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-emerald-400 font-bold">•</span>
-                    <span><strong className="text-[#eaa486]">耐高溫 PETG：</strong> 具備優秀耐溫與抗衝擊強度。</span>
+                    <span><strong className="text-highlight">耐高溫 PETG：</strong> 具備優秀耐溫與抗衝擊強度。</span>
                   </li>
                 </ul>
               </div>
@@ -117,8 +117,8 @@ export default function AppAbout({ switchView }) {
                 </div>
                 <ul className="text-xs text-customText space-y-2 pl-2">
                   <li className="flex items-start gap-2">
-                    <span className="text-[#eaa486] font-bold">•</span>
-                    <span><strong className="text-[#eaa486]">FLEX (&gt;90A) / TPU 90A / TPE 80A / TPE 65A</strong></span>
+                    <span className="text-highlight font-bold">•</span>
+                    <span><strong className="text-highlight">FLEX (&gt;90A) / TPU 90A / TPE 80A / TPE 65A</strong></span>
                   </li>
                   <li className="flex items-start gap-2 text-neutral-400">
                     <span>專精軟料列印技術，提供彈性與彈性體配件客製。</span>
@@ -193,6 +193,14 @@ export default function AppAbout({ switchView }) {
               </p>
             </div>
           </div>
+          <div className="text-[10px] font-mono text-logocolor uppercase tracking-widest font-semibold">
+            註:截至本網站20261028啟用，露天累積訂單數為4623
+          </div>
+          <img 
+            src="/images/露天訂單數4623.jpg" 
+            alt="露天訂單數4623" 
+            className="max-w-full max-h-full object-cover opacity-90 hover:scale-150 transition-transform duration-500 rounded-lg border border-neutral-800 shadow-2xl relative hover:z-30"
+            />    
         </div>
 
         {/* 4. 聯絡與社群 CONTACT & SOCIAL MEDIA */}

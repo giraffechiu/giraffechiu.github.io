@@ -22,11 +22,18 @@ export default function AppGuestbook({
 }) {
   return (
     <div className="relative z-20 w-full h-full pt-28 pb-12 px-6 md:px-24 overflow-y-auto flex flex-col items-center">
-      <div className="max-w-3xl w-full bg-neutral-950/90 backdrop-blur-md border border-neutral-800 rounded-xl p-6 md:p-8 shadow-2xl mt-4">
-        <h3 className="text-2xl md:text-3xl font-bold text-emerald-400 mb-2">訪客留言板</h3>
-        <p className="text-customText text-xs md:text-sm mb-6">歡迎留下您對 CRAFTER 600 的寶貴意見與交流！</p>
-
-        <form onSubmit={handleAddMessage} className="space-y-4 mb-8">
+      <div className="max-w-3xl w-full bg-neutral-950/90 backdrop-blur-md border border-neutral-800 rounded-xl p-6 md:p-8 shadow-2xl mt-4">        
+        <div className="border-b pb-0 border-neutral-800  text-center md:text-left">
+          <span className="text-emerald-400 font-mono text-xs tracking-widest uppercase block mb-1">
+            MESSAGE BOARD
+          </span>
+          <h2 className="text-3xl md:text-4xl font-bold text-logocolor mb-2 tracking-tight">
+            訪客留言板
+          </h2>
+          <p className="text-customText text-xs md:text-sm mb-6">歡迎留下您對 CRAFTER 600 的寶貴意見與交流！</p>
+        </div>
+        
+        <form onSubmit={handleAddMessage} className="space-y-4 mb-8 mt-6">
           <div>
             <label className="block text-xs font-mono text-customText mb-1">您的稱呼 / 暱稱</label>
             <input 
