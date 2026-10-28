@@ -86,7 +86,7 @@ export default function AppOrder({ switchView }) {
   const controlsRef = useRef(null);
   const occtRef = useRef(null);
 
-  const [currentFileName, setCurrentFileName] = useState('website3dtest.stl');
+  const [currentFileName, setCurrentFileName] = useState('website3d.stl');
   const [currentModelUrl, setCurrentModelUrl] = useState('./models/website3dtest.stl');
   const [uploadedFileObj, setUploadedFileObj] = useState(null);
 
@@ -159,7 +159,7 @@ export default function AppOrder({ switchView }) {
       case '排單列印中': return <span className="px-2.5 py-1 bg-amber-500/20 text-amber-400 border border-amber-500/40 text-xs font-mono rounded-full">排單列印中</span>;
       case '後處理中': return <span className="px-2.5 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/40 text-xs font-mono rounded-full">後處理中</span>;
       case '已寄出': case '已完成': return <span className="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-mono rounded-full">已寄出</span>;
-      default: return <span className="px-2.5 py-1 bg-neutral-800 text-neutral-400 border border-neutral-700 text-xs font-mono rounded-full">評估中</span>;
+      default: return <span className="px-2.5 py-1 bg-neutral-800 text-customText border border-neutral-700 text-xs font-mono rounded-full">評估中</span>;
     }
   };
 
@@ -219,14 +219,28 @@ export default function AppOrder({ switchView }) {
     }
   };
 
+  // const handleSelectPresetModel = (preset) => {
+  //   setUploadedFileObj(null);
+  //   setCurrentFileName(preset.name);
+  //   setCurrentModelUrl(preset.path);
+  // };
+
+  // const handleFileSelected = (file) => {
+  //   setCurrentFileName(file.name);
+  //   setUploadedFileObj(file);
+  // };
   const handleSelectPresetModel = (preset) => {
     setUploadedFileObj(null);
-    setCurrentFileName(preset.name);
+    // 將預設模型的副檔名轉為小寫
+    const lowerName = preset.name.replace(/\.([a-zA-Z0-9]+)$/, (_, ext) => `.${ext.toLowerCase()}`);
+    setCurrentFileName(lowerName);
     setCurrentModelUrl(preset.path);
   };
 
   const handleFileSelected = (file) => {
-    setCurrentFileName(file.name);
+    // 將使用者上傳的檔案名稱副檔名轉為小寫
+    const lowerName = file.name.replace(/\.([a-zA-Z0-9]+)$/, (_, ext) => `.${ext.toLowerCase()}`);
+    setCurrentFileName(lowerName);
     setUploadedFileObj(file);
   };
 
@@ -373,12 +387,13 @@ export default function AppOrder({ switchView }) {
                 <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
                   ✓
                 </div>
-                <h3 className="text-xl font-bold text-customText">線上訂單與3D模型檔案已成功送出！</h3>
+                <h3 className="text-xl font-bold text-highlight">線上訂單與3D模型檔案已成功送出！</h3>
                 <p className="text-emerald-400 font-mono text-sm">
                   您的專屬訂單編號：<span className="font-bold underline">{createdOrderNo}</span>
                 </p>
-                <p className="text-slate-300 text-sm leading-relaxed max-w-md mx-auto">
-                  我們已收到您的訂單。可利用訂單編號或手機號碼至「訂單處理進度查詢」查看最新狀態。
+                <p className="text-customText text-sm leading-relaxed max-w-md mx-auto">
+                  我們已收到您的訂單。<br />
+                  可利用訂單編號或手機號碼至「訂單處理進度查詢」查看最新狀態。
                 </p>
                 <div className="pt-4 flex justify-center gap-4">
                   <button
@@ -387,7 +402,7 @@ export default function AppOrder({ switchView }) {
                       setUploadedFileObj(null);
                       setContactForm({ name: '', phone: '', purpose: '' });
                     }}
-                    className="px-6 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-mono rounded-lg transition-colors cursor-pointer"
+                    className="px-6 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-customText text-xs font-mono rounded-lg transition-colors cursor-pointer"
                   >
                     再評估一個模型
                   </button>
@@ -398,14 +413,14 @@ export default function AppOrder({ switchView }) {
                       setSubmitted(false);
                       executeSearch(createdOrderNo);
                     }}
-                    className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-customText text-xs font-mono rounded-lg transition-colors cursor-pointer"
+                    className="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-customText text-xs font-mono rounded-lg transition-colors cursor-pointer"
                   >
                     前往進度查詢 →
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#14201e]/90 border border-[#2d423e] rounded-2xl p-4 md:p-8 shadow-2xl">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#75817f]/50 border border-[#2d423e] rounded-2xl p-4 md:p-8 shadow-2xl">
                 
                 <div className="lg:col-span-7 flex flex-col gap-4">
                   
@@ -416,7 +431,7 @@ export default function AppOrder({ switchView }) {
                         <button
                           key={preset.path}
                           onClick={() => handleSelectPresetModel(preset)}
-                          className={`px-2.5 py-1 text-xs rounded border ${currentFileName === preset.name ? 'bg-amber-400 text-slate-950 font-bold' : 'bg-[#1b2b28] text-slate-300 border-[#2d423e]'}`}
+                          className={`px-2.5 py-1 text-xs rounded border ${currentFileName === preset.name ? 'bg-amber-400 text-customText font-bold' : 'bg-[#1b2b28] text-customText border-[#2d423e]'}`}
                         >
                           {preset.name}
                         </button>
@@ -465,7 +480,7 @@ export default function AppOrder({ switchView }) {
                     )}
 
                     <div className="absolute top-3 left-3 z-10">
-                      <span className="px-2.5 py-1 bg-black/60 border border-[#2d423e] rounded text-[11px] font-mono text-slate-300">
+                      <span className="px-2.5 py-1 bg-black/60 border border-[#2d423e] rounded text-[11px] font-mono text-customText">
                         {currentFileName}
                       </span>
                     </div>
@@ -485,20 +500,20 @@ export default function AppOrder({ switchView }) {
                   {analysis && (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                       <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-                        <span className="block text-[11px] font-mono text-slate-400 uppercase">尺寸 (X×Y×Z)</span>
-                        <span className="text-sm font-bold text-slate-100 font-mono">{analysis.dimensions.x}×{analysis.dimensions.y}×{analysis.dimensions.z} mm</span>
+                        <span className="block text-[11px] font-mono text-customText uppercase">尺寸 (X×Y×Z)</span>
+                        <span className="text-sm font-bold text-customText font-mono">{analysis.dimensions.x}×{analysis.dimensions.y}×{analysis.dimensions.z} mm</span>
                       </div>
                       <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-                        <span className="block text-[11px] font-mono text-slate-400 uppercase">實體積 (Volume)</span>
-                        <span className="text-sm font-bold text-slate-100 font-mono">{analysis.volumeCm3.toLocaleString()} cm³</span>
+                        <span className="block text-[11px] font-mono text-customText uppercase">實體積 (Volume)</span>
+                        <span className="text-sm font-bold text-customText font-mono">{analysis.volumeCm3.toLocaleString()} cm³</span>
                       </div>
                       <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-                        <span className="block text-[11px] font-mono text-slate-400 uppercase">表面積 (Surface)</span>
-                        <span className="text-sm font-bold text-slate-100 font-mono">{analysis.surfaceAreaCm2.toLocaleString()} cm²</span>
+                        <span className="block text-[11px] font-mono text-customText uppercase">表面積 (Surface)</span>
+                        <span className="text-sm font-bold text-customText font-mono">{analysis.surfaceAreaCm2.toLocaleString()} cm²</span>
                       </div>
                       <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-                        <span className="block text-[11px] font-mono text-slate-400 uppercase">面數 (Triangles)</span>
-                        <span className="text-sm font-bold text-slate-100 font-mono">{analysis.triangleCount.toLocaleString()}</span>
+                        <span className="block text-[11px] font-mono text-customText uppercase">面數 (Triangles)</span>
+                        <span className="text-sm font-bold text-customText font-mono">{analysis.triangleCount.toLocaleString()}</span>
                       </div>
                     </div>
                   )}
@@ -511,16 +526,16 @@ export default function AppOrder({ switchView }) {
                       {/* <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto pr-1"> */}
                       <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-emerald-500/40 scrollbar-track-neutral-900">
                         {MATERIALS.map((mat) => (
-                          <button key={mat.id} onClick={() => { setSelectedMaterialId(mat.id); setSelectedColor(mat.colors[0]); }} className={`text-left p-2.5 rounded-lg border ${selectedMaterialId === mat.id ? 'bg-amber-500/10 border-amber-400 text-logocolor' : 'bg-[#162421] border-[#2d423e] text-logocolor'}`}>
+                          <button key={mat.id} onClick={() => { setSelectedMaterialId(mat.id); setSelectedColor(mat.colors[0]); }} className={`text-left p-2.5 rounded-lg border ${selectedMaterialId === mat.id ? 'bg-amber-900/10 border-amber-400 text-logocolor' : 'bg-[#162421] border-[#2d423e] text-logocolor'}`}>
                             <div className="flex justify-between items-center mb-0.5">
                             {/* <span className="font-bold text-xs">{mat.name}</span> */}
                             {/* 💡 將你的自訂顏色類別套用在這裡 */}
                             <h3 className={`${mat.textColor || 'text-customText'} font-bold text-xs`}>
                               {mat.name}
                             </h3>
-                            <span className="text-[11px] font-mono text-slate-100">NT$ {mat.costPerGram}/g</span></div>
+                            <span className="text-[11px] font-mono text-customText">NT$ {mat.costPerGram}/g</span></div>
                             
-                            <p className="text-[11px] text-slate-400">{mat.description}</p>
+                            <p className="text-[11px] text-logocolor/50">{mat.description}</p>
                           </button>
                         ))}
                       </div>
@@ -530,7 +545,7 @@ export default function AppOrder({ switchView }) {
                       <label className="block text-xs font-mono text-emerald-400 uppercase mb-1.5">[ 2. 顏色外觀 ]</label>
                       <div className="flex flex-wrap gap-2">
                         {selectedMaterial.colors.map((color) => (
-                          <button key={color} onClick={() => setSelectedColor(color)} className={`px-3 py-1 text-xs rounded border ${selectedColor === color ? 'bg-amber-500/10 text-customText border-amber-400 font-bold' : 'bg-[#182624] text-customText border-[#2d423e]'}`}>
+                          <button key={color} onClick={() => setSelectedColor(color)} className={`px-3 py-1 text-xs rounded border ${selectedColor === color ? 'bg-amber-900/10 text-customText border-amber-400 font-bold' : 'bg-[#162421] text-customText border-[#2d423e]'}`}>
                             {color}
                           </button>
                         ))}
@@ -562,7 +577,12 @@ export default function AppOrder({ switchView }) {
                       <label className="block text-xs font-mono text-emerald-400 uppercase mb-1.5">[ 3. 訂購數量與報價 ]</label>
                       <div className="flex items-center gap-2">
                         <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-7 h-7 rounded bg-[#1b2b28] border border-[#2d423e] text-customText font-bold">-</button>
-                        <input type="number" min="1" max="1000" value={quantity} onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))} className="w-16 bg-amber-500/10 border border-amber-400 text-center text-customText font-mono text-xs rounded p-1.5" />
+                        {/* <input type="number" min="1" max="1000" value={quantity} onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))} 
+                        className="w-16 bg-amber-900/10 border border-amber-400 text-center text-customText font-mono text-xs rounded p-1.5" /> */}
+                        {/* 改用 div 顯示數量，完全沒有箭頭問題 */}
+                        <div className="w-16 h-8 flex items-center justify-center bg-amber-900/10 border border-amber-400 text-center text-customText font-mono text-xs rounded select-none">
+                          {quantity}
+                        </div>
                         <button onClick={() => setQuantity(quantity + 1)} className="w-7 h-7 rounded bg-[#1b2b28] border border-[#2d423e] text-customText font-bold">+</button>
                       </div>
                     </div>
@@ -591,9 +611,9 @@ export default function AppOrder({ switchView }) {
                             </div>
                           </div>
 
-                          <div className="bg-amber-400/10 border border-amber-400/30 rounded-xl p-3 flex justify-between items-center">
+                          <div className="bg-amber-900/10 border border-amber-400/30 rounded-xl p-3 flex justify-between items-center">
                             <div>
-                              <span className="block text-[10px] font-mono text-[#3998d0] uppercase">
+                              <span className="block text-[10px] font-mono text-customText uppercase">
                                 總計預估金額 {rawTotalPrice < 200 ? '(含最低基本費)' : '(含稅)'}
                               </span>
                               <span className="text-xl font-black text-amber-400 font-mono">
@@ -608,15 +628,15 @@ export default function AppOrder({ switchView }) {
 
                     <label className="block text-xs font-mono text-emerald-400 uppercase">[ 4. 填寫聯絡資料並送出訂單 ]</label>
                     <div className="grid grid-cols-2 gap-2">
-                      <input type="text" placeholder="您的稱呼 *" value={contactForm.name} onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })} className="bg-[#182624] border border-[#2d423e] rounded p-2 text-xs text-slate-200" />
-                      <input type="text" placeholder="聯絡電話 / Line *" value={contactForm.phone} onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })} className="bg-[#182624] border border-[#2d423e] rounded p-2 text-xs text-slate-200" />
+                      <input type="text" placeholder="您的稱呼 *" value={contactForm.name} onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })} className="bg-[#182624] border border-[#2d423e] rounded p-2 text-xs text-customText" />
+                      <input type="text" placeholder="聯絡電話 / Line *" value={contactForm.phone} onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })} className="bg-[#182624] border border-[#2d423e] rounded p-2 text-xs text-customText" />
                     </div>
                     <div className="grid grid-cols-2 gap-2 pt-1">
                       <button onClick={copyQuoteSummary} className="w-full bg-[#1b2b28] text-customText text-[11px] font-semibold py-2 px-2 rounded border border-[#2d423e]">
                         {copied ? '✓ 已複製規格' : '複製報價規格'}
                       </button>
                       <button onClick={handleFinalSubmitOrder} disabled={submittingOrder} 
-                      className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-[11px] font-black py-2 px-2 rounded">
+                      className="w-full bg-emerald-500 hover:bg-emerald-400 text-customText text-[11px] font-black py-2 px-2 rounded">
                       {/* className="px-8 py-3 bg-emerald-500 text-black text-sm md:text-base font-semibold rounded-full hover:bg-emerald-400 hover:text-[#C5B9AC] shadow-xl transition-all transform hover:scale-105 cursor-pointer pointer-events-auto"> */}
                         {submittingOrder ? '上傳中...' : '確認送出訂單 →'}
                       </button>
@@ -630,10 +650,10 @@ export default function AppOrder({ switchView }) {
         )}
 
         {activeTab === 'search' && (
-          <div className="space-y-6 bg-[#14201e]/90 border border-[#2d423e] rounded-2xl p-6 md:p-8">
+          <div className="space-y-6 bg-[#101b19]/50 border border-[#2d423e] rounded-2xl p-6 md:p-8">
             <div className="border-b border-[#2d423e] pb-4">
-              <h3 className="text-lg font-bold text-slate-100">訂單處理進度查詢</h3>
-              <p className="text-xs text-slate-400 mt-1">請輸入您的訂單編號或手機號碼以查詢最新進度。</p>
+              <h3 className="text-lg font-bold text-highlight">進度查詢</h3>
+              {/* <p className="text-xs text-logocolor/50 mt-1">請輸入您的訂單編號或手機號碼以查詢最新進度。</p> */}
             </div>
 
             <form onSubmit={(e) => { e.preventDefault(); executeSearch(searchKey.trim()); }} className="flex gap-3">
@@ -642,13 +662,13 @@ export default function AppOrder({ switchView }) {
                 placeholder="請輸入訂單編號 (例如 2026102801) 或手機號碼" 
                 value={searchKey} 
                 onChange={(e) => setSearchKey(e.target.value)} 
-                className="flex-1 bg-[#182624] border border-[#2d423e] rounded-lg px-4 py-3 text-sm text-slate-100 font-mono focus:outline-none focus:border-amber-400" 
+                className="flex-1 bg-[#162421] border border-[#2d423e] rounded-lg px-4 py-3 text-sm text-logocolor/50 font-mono focus:outline-none focus:border-amber-400" 
                 required 
               />
               <button 
                 type="submit" 
                 disabled={searchLoading} 
-                className="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-customText text-xs font-mono rounded-lg transition-colors cursor-pointer"
+                className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-customText text-xs font-mono rounded-lg transition-colors cursor-pointer"
               >
                 {searchLoading ? '查詢中...' : '查詢狀態'}
               </button>
@@ -664,14 +684,14 @@ export default function AppOrder({ switchView }) {
                           <span className="text-amber-400 font-bold text-sm">訂單編號：{order.order_no}</span>
                           {getStatusBadge(order.status)}
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-slate-300">
-                          <div>客戶名稱：<span className="text-slate-100">{order.name}</span></div>
-                          <div>聯絡電話：<span className="text-slate-100">{order.phone}</span></div>
-                          <div>選擇材質：<span className="text-slate-100">{order.material_type}</span></div>
-                          <div>模型檔案：<span className="text-slate-100">{maskFileName(order.file_name)}</span></div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-customText">
+                          <div>客戶名稱：<span className="text-customText">{order.name}</span></div>
+                          <div>聯絡電話：<span className="text-customText">{order.phone}</span></div>
+                          <div>選擇材質：<span className="text-customText">{order.material_type}</span></div>
+                          <div>模型檔案：<span className="text-customText">{maskFileName(order.file_name)}</span></div>
                         </div>
                         {order.purpose && (
-                          <div className="text-slate-400 pt-1 border-t border-[#2d423e]/50">
+                          <div className="text-customText pt-1 border-t border-[#2d423e]/50">
                             備註需求：{order.purpose}
                           </div>
                         )}
@@ -679,7 +699,7 @@ export default function AppOrder({ switchView }) {
                     ))}
                   </div>
                 ) : (
-                  <div className="p-8 text-center bg-[#101b19] border border-[#2d423e] rounded-xl text-slate-400 font-mono text-xs">
+                  <div className="p-8 text-center bg-[#101b19] border border-[#2d423e] rounded-xl text-customText font-mono text-xs">
                     查無此訂單編號或手機號碼，請確認輸入是否正確。
                   </div>
                 )}
@@ -703,7 +723,7 @@ export default function AppOrder({ switchView }) {
                 <tbody className="divide-y divide-neutral-800/60 text-customText">
                   {historyOrders.map((item, idx) => (
                     <tr key={idx}>
-                      <td className="py-3 px-4 font-bold text-neutral-300">{item.order_no}</td>
+                      <td className="py-3 px-4 text-highlight">{item.order_no}</td>
                       <td className="py-3 px-4">{maskName(item.name)}</td>
                       <td className="py-3 px-4">{maskFileName(item.file_name)}</td>
                       <td className="py-3 px-4">{getStatusBadge(item.status)}</td>

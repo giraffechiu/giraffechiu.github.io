@@ -97,11 +97,11 @@ export default function AppAbout({ switchView }) {
                 </div>
                 <ul className="text-xs text-customText space-y-2 pl-2">
                   <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 font-bold">•</span>
+                    <span className="text-emerald-600 font-bold">•</span>
                     <span><strong className="text-highlight">高強度 PLA：</strong> 韌性接近 ABS，提供多款顏色選擇。</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 font-bold">•</span>
+                    <span className="text-emerald-600 font-bold">•</span>
                     <span><strong className="text-highlight">耐高溫 PETG：</strong> 具備優秀耐溫與抗衝擊強度。</span>
                   </li>
                 </ul>
@@ -117,7 +117,7 @@ export default function AppAbout({ switchView }) {
                 </div>
                 <ul className="text-xs text-customText space-y-2 pl-2">
                   <li className="flex items-start gap-2">
-                    <span className="text-highlight font-bold">•</span>
+                    <span className="text-[#3998d0] font-bold">•</span>
                     <span><strong className="text-highlight">FLEX (&gt;90A) / TPU 90A / TPE 80A / TPE 65A</strong></span>
                   </li>
                   <li className="flex items-start gap-2 text-neutral-400">

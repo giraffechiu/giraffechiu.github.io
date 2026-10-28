@@ -847,15 +847,15 @@ DELTA 3D PRINTING LAB | 積層造物`;
                   
                   <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#2d423e]">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-xs text-slate-400 font-mono">快速樣品:</span>
+                      <span className="text-xs text-customText font-mono">快速樣品:</span>
                       {PRESET_MODELS.map((preset) => (
                         <button
                           key={preset.path}
                           onClick={() => loadModelFromUrl(preset.path, preset.name)}
                           className={`px-2.5 py-1 text-xs rounded border transition-colors ${
                             currentFileName === preset.name
-                              ? 'bg-amber-400 text-slate-950 font-bold border-amber-400'
-                              : 'bg-[#1b2b28] text-slate-300 border-[#2d423e] hover:border-slate-500'
+                              ? 'bg-amber-400 text-customText font-bold border-amber-400'
+                              : 'bg-[#1b2b28] text-customText border-[#2d423e] hover:border-slate-500'
                           }`}
                         >
                           {preset.name}
@@ -901,7 +901,7 @@ DELTA 3D PRINTING LAB | 積層造物`;
                     )}
 
                     <div className="absolute top-3 left-3 z-10 flex items-center gap-2">
-                      <span className="px-2.5 py-1 bg-black/60 backdrop-blur-md border border-[#2d423e] rounded text-[11px] font-mono text-slate-300 truncate max-w-[200px]">
+                      <span className="px-2.5 py-1 bg-black/60 backdrop-blur-md border border-[#2d423e] rounded text-[11px] font-mono text-customText truncate max-w-[200px]">
                         {currentFileName}
                       </span>
                     </div>
@@ -917,7 +917,7 @@ DELTA 3D PRINTING LAB | 積層造物`;
                       </button>
                     </div>
 
-                    <div className="absolute bottom-3 left-3 z-10 pointer-events-none text-[11px] font-mono text-slate-400 bg-black/50 backdrop-blur-sm px-2 py-0.5 rounded">
+                    <div className="absolute bottom-3 left-3 z-10 pointer-events-none text-[11px] font-mono text-customText bg-black/50 backdrop-blur-sm px-2 py-0.5 rounded">
                       滑鼠左鍵旋轉 · 滾輪縮放 · 右鍵平移
                     </div>
                   </div>
@@ -925,35 +925,35 @@ DELTA 3D PRINTING LAB | 積層造物`;
                   {analysis && (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                       <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-                        <span className="block text-[11px] font-mono text-slate-400 uppercase">尺寸 (X×Y×Z)</span>
-                        <span className="text-sm font-bold text-slate-100 font-mono">
+                        <span className="block text-[11px] font-mono text-customText uppercase">尺寸 (X×Y×Z)</span>
+                        <span className="text-sm font-bold text-customText font-mono">
                           {analysis.dimensions.x}×{analysis.dimensions.y}×{analysis.dimensions.z}
                         </span>
-                        <span className="text-[10px] text-slate-400 block">公釐 (mm)</span>
+                        <span className="text-[10px] text-customText block">公釐 (mm)</span>
                       </div>
 
                       <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-                        <span className="block text-[11px] font-mono text-slate-400 uppercase">實體積 (Volume)</span>
+                        <span className="block text-[11px] font-mono text-customText uppercase">實體積 (Volume)</span>
                         <span className="text-sm font-bold text-amber-400 font-mono">
                           {analysis.volumeCm3.toLocaleString()}
                         </span>
-                        <span className="text-[10px] text-slate-400 block">立方公分 (cm³)</span>
+                        <span className="text-[10px] text-customText block">立方公分 (cm³)</span>
                       </div>
 
                       <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-                        <span className="block text-[11px] font-mono text-slate-400 uppercase">表面積 (Surface)</span>
-                        <span className="text-sm font-bold text-slate-100 font-mono">
+                        <span className="block text-[11px] font-mono text-customText uppercase">表面積 (Surface)</span>
+                        <span className="text-sm font-bold text-customText font-mono">
                           {analysis.surfaceAreaCm2.toLocaleString()}
                         </span>
-                        <span className="text-[10px] text-slate-400 block">平方公分 (cm²)</span>
+                        <span className="text-[10px] text-customText block">平方公分 (cm²)</span>
                       </div>
 
                       <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-                        <span className="block text-[11px] font-mono text-slate-400 uppercase">面數 (Triangles)</span>
-                        <span className="text-sm font-bold text-slate-100 font-mono">
+                        <span className="block text-[11px] font-mono text-customText uppercase">面數 (Triangles)</span>
+                        <span className="text-sm font-bold text-customText font-mono">
                           {analysis.triangleCount.toLocaleString()}
                         </span>
-                        <span className="text-[10px] text-slate-400 block">三角網格面</span>
+                        <span className="text-[10px] text-customText block">三角網格面</span>
                       </div>
                     </div>
                   )}
@@ -976,15 +976,15 @@ DELTA 3D PRINTING LAB | 積層造物`;
                             }}
                             className={`text-left p-2.5 rounded-lg border transition-all ${
                               selectedMaterialId === mat.id
-                                ? 'bg-amber-500/10 border-amber-400 text-slate-100 ring-1 ring-amber-400/40'
-                                : 'bg-[#162421] border-[#2d423e] text-slate-300 hover:border-slate-500'
+                                ? 'bg-amber-500/10 border-amber-400 text-customText ring-1 ring-amber-400/40'
+                                : 'bg-[#162421] border-[#2d423e] text-customText hover:border-slate-500'
                             }`}
                           >
                             <div className="flex justify-between items-center mb-0.5">
                               <span className="font-bold text-xs">{mat.name}</span>
                               <span className="text-[11px] font-mono text-amber-400">NT$ {mat.costPerGram}/g</span>
                             </div>
-                            <p className="text-[11px] text-slate-400 line-clamp-1">{mat.description}</p>
+                            <p className="text-[11px] text-customText line-clamp-1">{mat.description}</p>
                           </button>
                         ))}
                       </div>
@@ -1001,8 +1001,8 @@ DELTA 3D PRINTING LAB | 積層造物`;
                             onClick={() => setSelectedColor(color)}
                             className={`px-3 py-1 text-xs rounded border transition-colors ${
                               selectedColor === color
-                                ? 'bg-slate-200 text-slate-900 font-bold border-white'
-                                : 'bg-[#182624] text-slate-300 border-[#2d423e] hover:border-slate-500'
+                                ? 'bg-slate-200 text-customText font-bold border-white'
+                                : 'bg-[#182624] text-customText border-[#2d423e] hover:border-slate-500'
                             }`}
                           >
                             {color}
@@ -1013,13 +1013,13 @@ DELTA 3D PRINTING LAB | 積層造物`;
 
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-mono text-slate-300 uppercase mb-1">
+                        <label className="block text-xs font-mono text-customText uppercase mb-1">
                           層高 (Layer)
                         </label>
                         <select
                           value={layerHeight}
                           onChange={(e) => setLayerHeight(parseFloat(e.target.value))}
-                          className="w-full bg-[#182624] border border-[#2d423e] text-slate-200 text-xs rounded p-2 focus:border-amber-400 focus:outline-none"
+                          className="w-full bg-[#182624] border border-[#2d423e] text-customText text-xs rounded p-2 focus:border-amber-400 focus:outline-none"
                         >
                           <option value={0.1}>0.10 mm (超細緻)</option>
                           <option value={0.2}>0.20 mm (標準平衡)</option>
@@ -1028,13 +1028,13 @@ DELTA 3D PRINTING LAB | 積層造物`;
                       </div>
 
                       <div>
-                        <label className="block text-xs font-mono text-slate-300 uppercase mb-1">
+                        <label className="block text-xs font-mono text-customText uppercase mb-1">
                           填充 (Infill)
                         </label>
                         <select
                           value={infill}
                           onChange={(e) => setInfill(parseInt(e.target.value, 10))}
-                          className="w-full bg-[#182624] border border-[#2d423e] text-slate-200 text-xs rounded p-2 focus:border-amber-400 focus:outline-none"
+                          className="w-full bg-[#182624] border border-[#2d423e] text-customText text-xs rounded p-2 focus:border-amber-400 focus:outline-none"
                         >
                           <option value={15}>15% (輕量)</option>
                           <option value={20}>20% (標準推薦)</option>
@@ -1059,7 +1059,7 @@ DELTA 3D PRINTING LAB | 積層造物`;
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                          className="w-7 h-7 rounded bg-[#1b2b28] border border-[#2d423e] text-slate-200 font-bold hover:bg-[#253935] flex items-center justify-center cursor-pointer"
+                          className="w-7 h-7 rounded bg-[#1b2b28] border border-[#2d423e] text-customText font-bold hover:bg-[#253935] flex items-center justify-center cursor-pointer"
                         >
                           -
                         </button>
@@ -1069,15 +1069,15 @@ DELTA 3D PRINTING LAB | 積層造物`;
                           max="1000"
                           value={quantity}
                           onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))}
-                          className="w-16 bg-[#182624] border border-[#2d423e] text-center text-slate-100 font-mono text-xs rounded p-1.5 focus:border-amber-400 focus:outline-none"
+                          className="w-16 bg-[#182624] border border-[#2d423e] text-center text-customText font-mono text-xs rounded p-1.5 focus:border-amber-400 focus:outline-none"
                         />
                         <button
                           onClick={() => setQuantity(quantity + 1)}
-                          className="w-7 h-7 rounded bg-[#1b2b28] border border-[#2d423e] text-slate-200 font-bold hover:bg-[#253935] flex items-center justify-center cursor-pointer"
+                          className="w-7 h-7 rounded bg-[#1b2b28] border border-[#2d423e] text-customText font-bold hover:bg-[#253935] flex items-center justify-center cursor-pointer"
                         >
                           +
                         </button>
-                        <div className="flex gap-1 ml-auto text-[11px] font-mono text-slate-400">
+                        <div className="flex gap-1 ml-auto text-[11px] font-mono text-customText">
                           <span className="cursor-pointer underline hover:text-customText" onClick={() => setQuantity(5)}>5件</span>
                           <span>·</span>
                           <span className="cursor-pointer underline hover:text-customText" onClick={() => setQuantity(10)}>10件</span>
@@ -1097,16 +1097,16 @@ DELTA 3D PRINTING LAB | 積層造物`;
 
                       return (
                         <div className="pt-3 border-t border-[#2d423e] space-y-3">
-                          <div className="space-y-1 text-xs text-slate-300">
+                          <div className="space-y-1 text-xs text-customText">
                             <div className="flex justify-between">
-                              <span className="text-slate-400">
+                              <span className="text-customText">
                                 {quote ? '預估單件重量 / 總價:' : '預估單件重量 / 總價 (預設20g):'}
                               </span>
-                              <span className="font-mono text-slate-200">{displayWeight}g · NT$ {displayTotalPrice.toLocaleString()}</span>
+                              <span className="font-mono text-customText">{displayWeight}g · NT$ {displayTotalPrice.toLocaleString()}</span>
                             </div>
                             <div className="flex justify-between">
-                              <span className="text-slate-400">預估製作天數:</span>
-                              <span className="font-mono text-slate-200">約 {displayLeadDays} 個工作天</span>
+                              <span className="text-customText">預估製作天數:</span>
+                              <span className="font-mono text-customText">約 {displayLeadDays} 個工作天</span>
                             </div>
                           </div>
 
@@ -1119,7 +1119,7 @@ DELTA 3D PRINTING LAB | 積層造物`;
                                 NT$ {displayTotalPrice.toLocaleString()}
                               </span>
                             </div>
-                            <span className="text-xs text-slate-400 font-mono">({quantity} 件)</span>
+                            <span className="text-xs text-customText font-mono">({quantity} 件)</span>
                           </div>                          
                         </div>
                       );
@@ -1135,20 +1135,20 @@ DELTA 3D PRINTING LAB | 積層造物`;
                           placeholder="您的稱呼 *"
                           value={contactForm.name}
                           onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                          className="bg-[#182624] border border-[#2d423e] rounded p-2 text-xs text-slate-200 focus:outline-none focus:border-amber-400"
+                          className="bg-[#182624] border border-[#2d423e] rounded p-2 text-xs text-customText focus:outline-none focus:border-amber-400"
                         />
                         <input
                           type="text"
                           placeholder="聯絡電話 / Line *"
                           value={contactForm.phone}
                           onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
-                          className="bg-[#182624] border border-[#2d423e] rounded p-2 text-xs text-slate-200 focus:outline-none focus:border-amber-400"
+                          className="bg-[#182624] border border-[#2d423e] rounded p-2 text-xs text-customText focus:outline-none focus:border-amber-400"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-2 pt-1">
                             <button
                               onClick={copyQuoteSummary}
-                              className="w-full bg-[#1b2b28] hover:bg-[#253935] text-slate-200 text-[11px] font-semibold py-2 px-2 rounded border border-[#2d423e] transition-all flex items-center justify-center gap-1 cursor-pointer"
+                              className="w-full bg-[#1b2b28] hover:bg-[#253935] text-customText text-[11px] font-semibold py-2 px-2 rounded border border-[#2d423e] transition-all flex items-center justify-center gap-1 cursor-pointer"
                             >
                               {copied ? '✓ 已複製規格' : '複製報價規格'}
                             </button>
@@ -1156,7 +1156,7 @@ DELTA 3D PRINTING LAB | 積層造物`;
                             <button
                               onClick={handleFinalSubmitOrder}
                               disabled={submittingOrder}
-                              className="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 text-[11px] font-black py-2 px-2 rounded transition-all shadow-[0_0_10px_rgba(245,158,11,0.2)] text-center cursor-pointer disabled:opacity-50"
+                              className="w-full bg-amber-400 hover:bg-amber-300 text-customText text-[11px] font-black py-2 px-2 rounded transition-all shadow-[0_0_10px_rgba(245,158,11,0.2)] text-center cursor-pointer disabled:opacity-50"
                             >
                               {submittingOrder ? '上傳中...' : '確認送出訂單 →'}
                             </button>
