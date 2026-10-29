@@ -123,7 +123,7 @@ export function CrafterModel({
     if (sphLabelDom) sphLabelDom.style.opacity = (finalSphOpacity / 0.35).toString();
   });
 
-  // 處理 Geometry 載入、軸向校正與材質分配
+  // 處理一般單一幾何（STL、OBJ等）
   const processLoadedGeometry = (geometry) => {
     if (!geometry) return;
 
@@ -136,7 +136,6 @@ export function CrafterModel({
     const bbox = geometry.boundingBox;
     const heightY = bbox.max.y - bbox.min.y;
     
-    // 💡 改用 boundingBox 的對角線長度 (max 距離) 來計算更穩定的 maxDim
     const size = new THREE.Vector3();
     bbox.getSize(size);
     const maxDim = Math.max(size.x, size.y, size.z);
@@ -165,7 +164,6 @@ export function CrafterModel({
       orderMeshGroupRef.current.add(mesh);
     }
 
-    // 💡 將精準計算出的 maxDim 傳回給父元件作為視距依據
     if (onAnalysisComplete) {
       onAnalysisComplete(analysisRes, heightY, maxDim);
     }
@@ -214,26 +212,133 @@ export function CrafterModel({
         };
         reader.readAsText(fileObj);
       }
+      // 針對 3MF 檔案的處理邏輯（完美計算體積、置中並對齊原點）
       else if (fileName.endsWith('.3mf')) {
         const reader = new FileReader();
         reader.onload = (e) => {
           try {
             const loader = new ThreeMFLoader();
             const objGroup = loader.parse(e.target.result);
-            let mergedGeo = null;
+            
+            // 💡 1. 旋轉與對齊：將 .3mf 群組與 STL 保持一致的轉向與中心對齊
+            objGroup.rotation.x = -Math.PI / 2;
+            objGroup.updateMatrixWorld(true);
+
+            // 計算整個群組的包圍盒 (BoundingBox)
+            const box = new THREE.Box3().setFromObject(objGroup);
+            const center = new THREE.Vector3();
+            box.getCenter(center);
+            const size = new THREE.Vector3();
+            box.getSize(size);
+
+            // 將模型 XZ 平面置中，Y 軸底部對齊原點 (0, 0, 0)
+            objGroup.position.x -= center.x;
+            objGroup.position.z -= center.z;
+            objGroup.position.y -= box.min.y;
+
+            // 清空舊畫面並套用材質
+            if (orderMeshGroupRef.current) {
+              while (orderMeshGroupRef.current.children.length > 0) {
+                const obj = orderMeshGroupRef.current.children[0];
+                if (obj.geometry) obj.geometry.dispose();
+                orderMeshGroupRef.current.remove(obj);
+              }
+              
+              objGroup.traverse((child) => {
+                if (child.isMesh) {
+                  child.material = new THREE.MeshStandardMaterial({
+                    color: selectedColorHex,
+                    roughness: 0.4,
+                    metalness: 0.1,
+                    transparent: isTransparent,
+                    opacity: isTransparent ? 0.5 : 1.0,
+                    depthWrite: !isTransparent
+                  });
+                }
+              });
+              orderMeshGroupRef.current.add(objGroup);
+            }
+
+            // 2. 計算精準體積與尺寸
+            let totalVolume = 0;
+            let totalSurfaceArea = 0;
+            let totalTriangles = 0;
+            let firstGeoForBBox = null;
+
             objGroup.traverse((child) => {
-              if (child.isMesh && child.geometry) mergedGeo = child.geometry.clone();
+              if (child.isMesh && child.geometry) {
+                const geo = child.geometry.clone();
+                child.updateMatrixWorld(true);
+                geo.applyMatrix4(child.matrixWorld);
+
+                if (!firstGeoForBBox) firstGeoForBBox = geo;
+
+                const posAttr = geo.attributes.position;
+                const indexAttr = geo.index;
+
+                if (posAttr) {
+                  const p1 = new THREE.Vector3(), p2 = new THREE.Vector3(), p3 = new THREE.Vector3();
+                  if (indexAttr) {
+                    for (let i = 0; i < indexAttr.count; i += 3) {
+                      p1.fromBufferAttribute(posAttr, indexAttr.getX(i));
+                      p2.fromBufferAttribute(posAttr, indexAttr.getX(i + 1));
+                      p3.fromBufferAttribute(posAttr, indexAttr.getX(i + 2));
+                      totalVolume += p1.dot(p2.clone().cross(p3)) / 6.0;
+                      const ab = p2.clone().sub(p1);
+                      const ac = p3.clone().sub(p1);
+                      totalSurfaceArea += ab.cross(ac).length() / 2.0;
+                      totalTriangles++;
+                    }
+                  } else {
+                    for (let i = 0; i < posAttr.count; i += 3) {
+                      p1.fromBufferAttribute(posAttr, i);
+                      p2.fromBufferAttribute(posAttr, i + 1);
+                      p3.fromBufferAttribute(posAttr, i + 2);
+                      totalVolume += p1.dot(p2.clone().cross(p3)) / 6.0;
+                      const ab = p2.clone().sub(p1);
+                      const ac = p3.clone().sub(p1);
+                      totalSurfaceArea += ab.cross(ac).length() / 2.0;
+                      totalTriangles++;
+                    }
+                  }
+                }
+              }
             });
-            if (mergedGeo) processLoadedGeometry(mergedGeo);
-            else alert('3MF 檔案中未發現有效幾何網格。');
+
+            if (firstGeoForBBox && totalTriangles > 0) {
+              const dimensions = {
+                x: Math.round(size.x * 10) / 10,
+                y: Math.round(size.y * 10) / 10,
+                z: Math.round(size.z * 10) / 10,
+              };
+
+              const volumeCm3 = Math.round((Math.abs(totalVolume) / 1000) * 10) / 10;
+              const surfaceAreaCm2 = Math.round((totalSurfaceArea / 100) * 10) / 10;
+
+              const analysisRes = {
+                dimensions,
+                volumeCm3: Math.max(volumeCm3, 0.5),
+                surfaceAreaCm2: Math.max(surfaceAreaCm2, 1.0),
+                triangleCount: totalTriangles,
+              };
+
+              const maxDim = Math.max(size.x, size.y, size.z);
+              if (onAnalysisComplete) {
+                onAnalysisComplete(analysisRes, size.y, maxDim);
+              }
+            }
+
+            if (onLoadingStateChange) onLoadingStateChange(false);
           } catch (err) {
+            console.error(err);
             alert('解析 3MF 檔案失敗。');
-          } finally {
             if (onLoadingStateChange) onLoadingStateChange(false);
           }
         };
         reader.readAsArrayBuffer(fileObj);
       }
+      
+      // 針對 STEP / STP 檔案的高解析度處理邏輯
       else if (fileName.endsWith('.step') || fileName.endsWith('.stp')) {
         if (!occtEngine) {
           alert('STEP 解析引擎仍在初始化中，請稍候再試。');
@@ -245,7 +350,13 @@ export function CrafterModel({
           try {
             const buffer = e.target.result;
             const fileBuffer = new Uint8Array(buffer);
-            const result = occtEngine.ReadStepFile(fileBuffer);
+            
+            // 💡 調整網格化參數以拉高曲面解析度（linearDeflection 越小越平滑）
+            const options = {
+              linearDeflection: 0.0001,  //大約10萬面
+              angularDeflection: 0.15,
+            };
+            const result = occtEngine.ReadStepFile(fileBuffer, options);
             
             if (result && result.meshes && result.meshes.length > 0) {
               const combinedGeo = new THREE.BufferGeometry();

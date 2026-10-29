@@ -10,24 +10,23 @@ import { supabase } from './supabaseClient';
 const MATERIALS = [
   {
     id: 'pla',
-    name: 'PLA 高精度環保線材',
+    name: 'PLA 高強度基礎線材',
     costPerGram: 2.5,
-    description: '表面光潔、極低收縮率，適合原型外殼與機構驗證',
+    description: '適合原型外殼與機構驗證、耐溫 55°C，',
     colors: ['純白','太空灰','暗夜黑','工業黃','明亮橙'],
-    // textColor: 'text-highlight', // 也可直接在這裡指定 Tailwind 類別
   },
   {
     id: 'petg',
     name: 'PETG 高韌性耐溫線材',
     costPerGram: 3.2,
-    description: '耐衝擊與韌性、耐溫 75°C，適合日常機構卡扣',
+    description: '耐衝擊與韌性、耐溫 70°C，適合日常機構卡扣',
     colors: ['消光黑', '工程灰', '透光橙'],
   },
   {
     id: 'petgcf',
     name: 'PETG-CF 碳纖維增強線材',
     costPerGram: 4.8,
-    description: '高模量碳纖維增強、啞光質感、耐溫 80°C，低收縮無翹曲',
+    description: '高模量碳纖維增強、耐溫 80°C，輕量化首選',
     colors: ['消光碳黑'],
   },
   {
@@ -39,32 +38,45 @@ const MATERIALS = [
   },
 ];
 
-
-// 💡 統一採用驗證成功的 ./相對路徑
 const PRESET_MODELS = [
-  { name: '網站測試用模型', path: './models/website3dtest.stl' },
+  { name: '網站測試用模型.stl', path: './models/website3dtest.stl' },
 ];
 
-// 
+// 計算報價公式
 function calculateQuote(analysis, materialId, infill, layerHeight, quantity) {
   const material = MATERIALS.find(m => m.id === materialId) || MATERIALS[0];
   const density = 1.25;
   const infillRatio = infill / 100;
 
-  // 1. 計算 SA/V 比率並轉換為動態外殼佔比 (shellFactor)
-  // 假設平均等效外殼厚度為 0.15 cm (1.5mm)，涵蓋外壁與頂底層
-  const saRatio = analysis.surfaceAreaCm2 / Math.max(0.01, analysis.volumeCm3);
-  const calculatedShellFactor = saRatio * 0.15;
-  
-  // 安全限制：外殼佔比最少 5%，最多 85%，防止極端形狀失真
-  const shellFactor = Math.max(0.05, Math.min(0.85, calculatedShellFactor));
+  // const saRatio = analysis.surfaceAreaCm2 / Math.max(0.01, analysis.volumeCm3);  
+  // const calculatedShellFactor = saRatio * 0.15;
+  // const shellFactor = Math.max(0.05, Math.min(0.85, calculatedShellFactor));
 
-  // 2. 計算有效體積：動態外殼體積 + 剩餘內部空間的填充用料
-  const effectiveVolume = analysis.volumeCm3 * (shellFactor + (1 - shellFactor) * infillRatio);
+  // 💡 修正複雜度計算：綜合考量「表面積體積比」與「面數密度」，並設定合理上限
+  const saRatio = analysis.surfaceAreaCm2 / Math.max(0.01, analysis.volumeCm3);
   
+  // 針對扁平或小體積物件進行權重平滑，避免表面積比過大導致誤判
+  let calculatedShellFactor = (saRatio * 0.10) * Math.min(1.0, analysis.volumeCm3 / 50);
+  
+  // 如果面數很少（代表幾何很平滑簡單），直接給予較低的基礎複雜度
+  if (analysis.triangleCount < 2000) {
+    calculatedShellFactor = Math.min(calculatedShellFactor, 0.25);
+  }
+
+  // shellFactor 被限制在 0.10 到 0.75 之間（即複雜度 10% 到 75%）
+  const shellFactor = Math.max(0.10, Math.min(0.75, calculatedShellFactor));
+
+  const effectiveVolume = analysis.volumeCm3 * (shellFactor + (1 - shellFactor) * infillRatio);
   const estimatedWeightGrams = Math.max(5, Math.round(effectiveVolume * density * 10) / 10);
 
-  const rawCost = estimatedWeightGrams * material.costPerGram;
+  // 建立「複雜度價格係數」1.5
+  // 例如：當複雜度(shellFactor)為 0% 時係數為 1.0（不加價），當複雜度為100%且係數為1.5時，單價可增加為2.5倍  
+  const complexityMultiplier = 1.0 + (shellFactor * 1.5); // 調高最後這個數值來使得複雜度對價格的影響更強烈
+
+  // 3. 💡 將係數乘入 rawCost 中
+  const rawCost = estimatedWeightGrams * material.costPerGram * complexityMultiplier;
+
+
   const baseHandlingFee = 150;
   const layerFactor = layerHeight <= 0.15 ? 1.3 : 1.0;
 
@@ -81,7 +93,6 @@ function calculateQuote(analysis, materialId, infill, layerHeight, quantity) {
   const totalPrice = subtotal - discountAmount;
   const estimatedLeadDays = Math.max(1, Math.ceil((estimatedWeightGrams * quantity) / 500));
   const debugShellFactor = Math.round(shellFactor * 100) / 100;
-  
 
   return {
     estimatedWeightGrams,
@@ -91,7 +102,6 @@ function calculateQuote(analysis, materialId, infill, layerHeight, quantity) {
     discountAmount,
     totalPrice,
     estimatedLeadDays,
-    // 額外附上計算出的外殼係數，方便在前端面板或除錯時觀察
     debugShellFactor,
   };
 }
@@ -102,7 +112,7 @@ export default function AppOrder({ switchView }) {
   const controlsRef = useRef(null);
   const occtRef = useRef(null);
 
-  const [currentFileName, setCurrentFileName] = useState('website3d.stl');
+  const [currentFileName, setCurrentFileName] = useState('網站測試用模型.stl');
   const [currentModelUrl, setCurrentModelUrl] = useState('./models/website3dtest.stl');
   const [uploadedFileObj, setUploadedFileObj] = useState(null);
 
@@ -110,13 +120,16 @@ export default function AppOrder({ switchView }) {
   const [quote, setQuote] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isTransparent, setIsTransparent] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   const [selectedMaterialId, setSelectedMaterialId] = useState('pla');
   const [layerHeight, setLayerHeight] = useState(0.2);
   const [infill, setInfill] = useState(20);
-  const [selectedColor, setSelectedColor] = useState('太空灰');
+  const [selectedColor, setSelectedColor] = useState('純白');
   const [quantity, setQuantity] = useState(1);
+
+  const [orderItems, setOrderItems] = useState([]);
+  const [manualAccumulatedAmount, setManualAccumulatedAmount] = useState(0);
+  const [manualAccumulatedCount, setManualAccumulatedCount] = useState(0);
 
   const [contactForm, setContactForm] = useState({ name: '', phone: '', purpose: '' });
   const [submittingOrder, setSubmittingOrder] = useState(false);
@@ -132,7 +145,10 @@ export default function AppOrder({ switchView }) {
   const [totalOrderCount, setTotalOrderCount] = useState(0);
   const [historyLoading, setHistoryLoading] = useState(false);
 
-  // 初始化 OCCT STEP 解析引擎
+  const selectedMaterial = MATERIALS.find((m) => m.id === selectedMaterialId) || MATERIALS[0];
+  const liveQuote = analysis ? calculateQuote(analysis, selectedMaterialId, infill, layerHeight, quantity) : null;
+  const singleItemQuote = analysis ? calculateQuote(analysis, selectedMaterialId, infill, layerHeight, 1) : null;
+
   useEffect(() => {
     occtimportjs({
       locateFile: (path) => {
@@ -160,14 +176,25 @@ export default function AppOrder({ switchView }) {
   };
 
   const maskName = (name) => (!name ? '***' : name.length <= 2 ? name[0] + '*' : name[0] + '*'.repeat(name.length - 2) + name[name.length - 1]);
+  
   const maskFileName = (fname) => {
     if (!fname) return '無附加檔案';
-    const parts = fname.split('/');
-    const realName = parts[parts.length - 1];
-    const nameParts = realName.split('.');
-    const ext = nameParts.length > 1 ? '.' + nameParts.pop().toLowerCase() : '';
-    const name = nameParts.join('.');
-    return name.length <= 3 ? name[0] + '***' + ext : name.substring(0, 2) + '***' + name.slice(-2) + ext;
+    const names = fname.split(/[,;]/).map(n => n.trim()).filter(Boolean);
+    if (names.length === 0) return '無附加檔案';
+
+    const formatSingle = (fName) => {
+      const parts = fName.split('/');
+      const realName = parts[parts.length - 1];
+      const nameParts = realName.split('.');
+      const ext = nameParts.length > 1 ? '.' + nameParts.pop().toLowerCase() : '';
+      const name = nameParts.join('.');
+      return name.length <= 3 ? name[0] + '***' + ext : name.substring(0, 2) + '***' + name.slice(-2) + ext;
+    };
+
+    if (names.length > 1) {
+      return `${formatSingle(names[0])} etc.`;
+    }
+    return formatSingle(names[0]);
   };
 
   const getStatusBadge = (status) => {
@@ -200,7 +227,6 @@ export default function AppOrder({ switchView }) {
     setQuote(newQuote);
   }, [analysis, selectedMaterialId, infill, layerHeight, quantity]);
 
-  // 💡 接收從 CrafterModel 回傳的幾何分析資料、高度與包圍半徑，自動運算出完美的相機距離
   const handleAnalysisComplete = (analysisRes, heightY, maxDim = 100) => {
     setAnalysis(analysisRes);
     if (controlsRef.current) {
@@ -210,17 +236,15 @@ export default function AppOrder({ switchView }) {
       const fov = camera.fov || 45;
       const fovRad = (fov * Math.PI) / 180;
       
-      // 💡 針對不同大小的模型採用動態係數：
-      // 小模型給予較大倍率以拉近，大模型給予壓縮倍率避免推太遠
       let scaleFactor = 1.6;
       if (maxDim > 200) {
-        scaleFactor = 0.7; // 大模型壓縮距離，避免相機退太遠
+        scaleFactor = 0.7;
       } else if (maxDim < 50) {
-        scaleFactor = 2.2;  // 小模型拉大倍率，確保近距離清晰
+        scaleFactor = 2.2;
       }
 
       let optimalDistance = ((maxDim / 2) / Math.sin(fovRad / 2)) * scaleFactor;
-      optimalDistance = Math.max(25, Math.min(optimalDistance, 1200)); // 設安全區間（最小 25，最大 1200）
+      optimalDistance = Math.max(25, Math.min(optimalDistance, 1200));
 
       const targetY = heightY / 2;
       controls.target.set(0, targetY, 0);
@@ -235,29 +259,11 @@ export default function AppOrder({ switchView }) {
     }
   };
 
-  // const handleSelectPresetModel = (preset) => {
-  //   setUploadedFileObj(null);
-  //   setCurrentFileName(preset.name);
-  //   setCurrentModelUrl(preset.path);
-  // };
-
-  // const handleFileSelected = (file) => {
-  //   setCurrentFileName(file.name);
-  //   setUploadedFileObj(file);
-  // };
-  const handleSelectPresetModel = (preset) => {
-    setUploadedFileObj(null);
-    // 將預設模型的副檔名轉為小寫
-    const lowerName = preset.name.replace(/\.([a-zA-Z0-9]+)$/, (_, ext) => `.${ext.toLowerCase()}`);
-    setCurrentFileName(lowerName);
-    setCurrentModelUrl(preset.path);
-  };
-
   const handleFileSelected = (file) => {
-    // 將使用者上傳的檔案名稱副檔名轉為小寫
     const lowerName = file.name.replace(/\.([a-zA-Z0-9]+)$/, (_, ext) => `.${ext.toLowerCase()}`);
     setCurrentFileName(lowerName);
     setUploadedFileObj(file);
+    setQuantity(1);
   };
 
   const onDrop = (e) => {
@@ -267,36 +273,66 @@ export default function AppOrder({ switchView }) {
     }
   };
 
-  const copyQuoteSummary = () => {
-    if (!quote || !analysis) return;
+  // 💡 移除檔名重複檢查，允許持續累積相同檔名的數量與價格
+  const handleAddCurrentItemToOrder = () => {
+    const currentPrice = liveQuote ? liveQuote.totalPrice : 200;
+    const currentQty = quantity;
     const currentMat = MATERIALS.find((m) => m.id === selectedMaterialId);
-    const text = `【3d砌作 · 線上即時報價單】
-檔案名稱: ${currentFileName}
-模型尺寸: ${analysis.dimensions.x} × ${analysis.dimensions.y} × ${analysis.dimensions.z} mm
-幾何實體積: ${analysis.volumeCm3} cm³
-預估重量: ${quote.estimatedWeightGrams} g / 件
+    
+    const newItem = {
+      id: Date.now(),
+      fileName: currentFileName,
+      fileObj: uploadedFileObj,
+      materialName: currentMat?.name || selectedMaterialId,
+      color: selectedColor,
+      layerHeight,
+      infill,
+      quantity: currentQty,
+      totalPrice: currentPrice,
+    };
 
-選擇材質: ${currentMat?.name} (${selectedColor})
-層高精度: ${layerHeight} mm
-填充密度: ${infill}%
-訂製數量: ${quantity} 件
-----------------------------------------
-單件單價: NT$ ${quote.unitPrice.toLocaleString()}
-預估總價: NT$ ${quote.totalPrice.toLocaleString()}
-預估工期: 約 ${quote.estimatedLeadDays} 個工作天
-----------------------------------------
-官方 LINE 專人諮詢 ID: giraffechiu`;
-
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+    setOrderItems(prev => [...prev, newItem]);
+    setManualAccumulatedAmount(prev => prev + currentPrice);
+    setManualAccumulatedCount(prev => prev + currentQty);
+    
+    alert(`已成功將 ${currentFileName} 加入此筆訂單！`);
   };
+
+  const totalAccumulatedAmount = orderItems.length > 0 
+    ? manualAccumulatedAmount 
+    : (liveQuote ? liveQuote.totalPrice : 200);
+
+  const totalAccumulatedCount = orderItems.length > 0 
+    ? manualAccumulatedCount 
+    : quantity;
 
   const handleFinalSubmitOrder = async () => {
     if (!contactForm.name.trim() || !contactForm.phone.trim()) {
       alert('請填寫完整的聯絡人資訊（姓名、電話）！');
       return;
     }
+
+    let finalItems = [...orderItems];
+    if (finalItems.length === 0 && liveQuote) {
+      const currentMat = MATERIALS.find((m) => m.id === selectedMaterialId);
+      finalItems.push({
+        id: Date.now(),
+        fileName: currentFileName,
+        fileObj: uploadedFileObj,
+        materialName: currentMat?.name || selectedMaterialId,
+        color: selectedColor,
+        layerHeight,
+        infill,
+        quantity,
+        totalPrice: liveQuote.totalPrice,
+      });
+    }
+
+    if (finalItems.length === 0) {
+      alert('請至少評估並加入一個 3D 模型檔案！');
+      return;
+    }
+
     setSubmittingOrder(true);
 
     try {
@@ -306,41 +342,69 @@ export default function AppOrder({ switchView }) {
       const day = String(now.getDate()).padStart(2, '0');
       const datePrefix = `${year}${month}${day}`;
 
-      const { count, error: countError } = await supabase
+      const { data: existingOrders, error: queryError } = await supabase
         .from('orders')
-        .select('*', { count: 'exact', head: true })
+        .select('order_no')
         .ilike('order_no', `${datePrefix}%`);
 
-      if (countError) throw countError;
+      if (queryError) throw queryError;
 
-      const dailySeq = String((count || 0) + 1).padStart(2, '0');
-      const orderNo = `${datePrefix}${dailySeq}`;
+      let maxSeq = 0;
+      if (existingOrders && existingOrders.length > 0) {
+        existingOrders.forEach(ord => {
+          const suffix = parseInt(ord.order_no.replace(datePrefix, ''), 10);
+          if (!isNaN(suffix) && suffix > maxSeq) {
+            maxSeq = suffix;
+          }
+        });
+      }
 
-      let uploadedFilePath = currentFileName;
-      if (uploadedFileObj) {
-        const fileExt = uploadedFileObj.name.split('.').pop() || 'stl';
-        const storagePath = `${orderNo}.${fileExt}`;
-        
-        const { error: storageError } = await supabase.storage
-          .from('order-3D-files')
-          .upload(storagePath, uploadedFileObj, { upsert: true });
+      const nextSeq = String(maxSeq + 1).padStart(2, '0');
+      const orderNo = `${datePrefix}${nextSeq}`;
 
-        if (storageError) {
-          console.error('檔案上傳至 Supabase Storage 失敗:', storageError);
+      const uploadedFileNames = [];
+      for (let i = 0; i < finalItems.length; i++) {
+        const item = finalItems[i];
+        if (!uploadedFileNames.includes(item.fileName)) {
+          uploadedFileNames.push(item.fileName);
+        }
+
+        if (item.fileObj) {
+          const fileExt = item.fileObj.name.split('.').pop() || 'stl';
+          const fileIndexStr = String(i + 1).padStart(2, '0');
+          const storagePath = `${orderNo}${fileIndexStr}.${fileExt}`;
+          
+          const { error: storageError } = await supabase.storage
+            .from('order-3D-files')
+            .upload(storagePath, item.fileObj, { upsert: true });
+
+          if (storageError) {
+            console.error(`檔案 ${item.fileName} 上傳失敗:`, storageError);
+          }
         }
       }
 
-      const currentMat = MATERIALS.find((m) => m.id === selectedMaterialId);
-      const materialDesc = `${currentMat?.name || selectedMaterialId} (${selectedColor})`;
+      // 💡 明細內容中包含層高與填充資訊
+      const detailedPurposeSummary = finalItems.map((item, idx) => 
+        `[${idx + 1}] 檔名: ${item.fileName} | 材質: ${item.materialName} | 顏色: ${item.color} | 層高: ${item.layerHeight}mm | 填充: ${item.infill}% | 數量: ${item.quantity}件 | 金額: NT$ ${item.totalPrice.toLocaleString()}`
+      ).join('\n');
+
+      const primaryMaterial = finalItems[0].materialName + ' (' + finalItems[0].color + ')';
+      const uniqueFileNames = Array.from(new Set(uploadedFileNames)).join(', ');
+
+      const grandTotalAmount = finalItems.reduce((acc, curr) => acc + curr.totalPrice, 0);
+      const grandTotalCount = finalItems.reduce((acc, curr) => acc + curr.quantity, 0);
+
+      const fullPurposeText = `${contactForm.purpose.trim() ? contactForm.purpose.trim() + '\n' : ''}--- 報價明細 ---:\n${detailedPurposeSummary}\n-------------------\n總件數: ${grandTotalCount} 件 | 總金額: NT$ ${grandTotalAmount.toLocaleString()}`;
 
       const payload = {
         order_no: orderNo,
         name: contactForm.name.trim(),
         phone: contactForm.phone.trim(),
-        material_type: materialDesc,
-        layer_height: String(layerHeight),
-        purpose: contactForm.purpose.trim() || `數量: ${quantity}件, 填充: ${infill}%`,
-        file_name: currentFileName,
+        material_type: primaryMaterial,
+        layer_height: String(finalItems[0].layerHeight),
+        purpose: fullPurposeText,
+        file_name: uniqueFileNames,
         status: '評估中'
       };
 
@@ -367,16 +431,11 @@ export default function AppOrder({ switchView }) {
     setSearchResult(data || []);
   };
 
-  const selectedMaterial = MATERIALS.find((m) => m.id === selectedMaterialId) || MATERIALS[0];
-  
-  // 💡 在這裡即時統一調用報價函數，確保整個元件都能安全共用最新計算結果
-  const liveQuote = analysis ? calculateQuote(analysis, selectedMaterialId, infill, layerHeight, quantity) : null;
-
   return (
     <div className="relative z-20 w-full h-full pt-24 pb-16 px-4 md:px-12 overflow-y-auto flex flex-col items-center">
       <div className="max-w-6xl w-full bg-neutral-950/85 backdrop-blur-md border border-neutral-800/80 rounded-2xl p-6 sm:p-10 md:p-12 shadow-2xl mt-4 space-y-8 font-sans">
         
-        <div className="border-b pb-0 border-neutral-800  text-center md:text-left">
+        <div className="border-b pb-0 border-neutral-800 text-center md:text-left">
           <span className="text-emerald-400 font-mono text-xs tracking-widest uppercase block mb-1">
             ONLINE 3D MODEL PREVIEW &amp; INSTANT QUOTE
           </span>
@@ -410,15 +469,15 @@ export default function AppOrder({ switchView }) {
                 <p className="text-emerald-400 font-mono text-sm">
                   您的專屬訂單編號：<span className="font-bold underline">{createdOrderNo}</span>
                 </p>
-                <p className="text-customText text-sm leading-relaxed max-w-md mx-auto">
-                  我們已收到您的訂單。<br />
-                  可利用訂單編號或手機號碼至「訂單處理進度查詢」查看最新狀態。
-                </p>
                 <div className="pt-4 flex justify-center gap-4">
                   <button
                     onClick={() => {
                       setSubmitted(false);
                       setUploadedFileObj(null);
+                      setOrderItems([]);
+                      setManualAccumulatedAmount(0);
+                      setManualAccumulatedCount(0);
+                      setQuantity(1);
                       setContactForm({ name: '', phone: '', purpose: '' });
                     }}
                     className="px-6 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-customText text-xs font-mono rounded-lg transition-colors cursor-pointer"
@@ -439,31 +498,19 @@ export default function AppOrder({ switchView }) {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#75817f]/50 border border-[#2d423e] rounded-2xl p-4 md:p-8 shadow-2xl">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-greygrey/50 border border-[#2d423e] rounded-2xl p-4 md:p-8 shadow-2xl">
                 
                 <div className="lg:col-span-7 flex flex-col gap-4">
                   
-                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#2d423e]">
-                    {/* <div className="flex items-center gap-2">
-                      <span className="text-xs text-customText font-mono">快速樣品:</span>
-                      {PRESET_MODELS.map((preset) => (
-                        <button
-                          key={preset.path}
-                          onClick={() => handleSelectPresetModel(preset)}
-                          className={`px-2.5 py-1 text-xs rounded border ${currentFileName === preset.name ? 'bg-amber-400 text-customText font-bold' : 'bg-[#1b2b28] text-customText border-[#2d423e]'}`}
-                        >
-                          {preset.name}
-                        </button>
-                      ))}
-                    </div> */}
-
+                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-[#2d423e]">
                     <button
                       onClick={() => fileInputRef.current?.click()}
-                      className="px-3 py-1 text-xs bg-[#1b2b28] text-amber-400 font-semibold border border-amber-400/40 rounded flex items-center gap-1.5 cursor-pointer"
+                      className="px-3 py-1 text-ms bg-[#1b2b28] text-amber-400 font-semibold border border-amber-400/40 rounded flex items-center gap-1.5 cursor-pointer"
                     >
-                      3D模型檔案上傳
+                      載入3D模型
                     </button>
                     <input ref={fileInputRef} type="file" accept=".stl,.obj,.3mf,.step,.stp" className="hidden" onChange={(e) => e.target.files?.[0] && handleFileSelected(e.target.files[0])} />
+                    <span className="text-xs font-mono text-customText">註:送出訂單才會上傳檔案</span>
                   </div>
 
                   <div onDragOver={(e) => e.preventDefault()} onDrop={onDrop} className="relative w-full h-[380px] md:h-[440px] rounded-xl overflow-hidden border border-[#2d423e]">
@@ -516,60 +563,52 @@ export default function AppOrder({ switchView }) {
                     </div>
                   </div>
 
-                  
-
                   {analysis && (
-  <div className="flex flex-col gap-3">
-    {/* 上方 4 個主要的數據方塊 */}
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-        <span className="block text-[11px] font-mono text-customText uppercase">尺寸 (X×Y×Z)</span>
-        <span className="text-sm font-bold text-customText font-mono">{analysis.dimensions.x}×{analysis.dimensions.y}×{analysis.dimensions.z} mm</span>
-      </div>
-      <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-        <span className="block text-[11px] font-mono text-customText uppercase">實體積 (Volume)</span>
-        <span className="text-sm font-bold text-customText font-mono">{analysis.volumeCm3.toLocaleString()} cm³</span>
-      </div>
-      <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-        <span className="block text-[11px] font-mono text-customText uppercase">表面積 (Surface)</span>
-        <span className="text-sm font-bold text-customText font-mono">{analysis.surfaceAreaCm2.toLocaleString()} cm²</span>
-      </div>
-      <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
-        <span className="block text-[11px] font-mono text-customText uppercase">面數 (Triangles)</span>
-        <span className="text-sm font-bold text-customText font-mono">{analysis.triangleCount.toLocaleString()}</span>
-      </div>
-    </div>
+                    <div className="flex flex-col gap-3">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
+                          <span className="block text-[11px] font-mono text-customText uppercase">尺寸 (X×Y×Z)</span>
+                          <span className="text-sm font-bold text-customText font-mono">{analysis.dimensions.x}×{analysis.dimensions.y}×{analysis.dimensions.z} mm</span>
+                        </div>
+                        <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
+                          <span className="block text-[11px] font-mono text-customText uppercase">實體積 (Volume)</span>
+                          <span className="text-sm font-bold text-customText font-mono">{analysis.volumeCm3.toLocaleString()} cm³</span>
+                        </div>
+                        <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
+                          <span className="block text-[11px] font-mono text-customText uppercase">表面積 (Surface)</span>
+                          <span className="text-sm font-bold text-customText font-mono">{analysis.surfaceAreaCm2.toLocaleString()} cm²</span>
+                        </div>
+                        <div className="bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3">
+                          <span className="block text-[11px] font-mono text-customText uppercase">面數 (Triangles)</span>
+                          <span className="text-sm font-bold text-customText font-mono">{analysis.triangleCount.toLocaleString()}</span>
+                        </div>
+                      </div>
 
-    {/* 💡 模型複雜度獨立拉出來放在下方，使用 w-full 佔滿整行並水平置中 */}
-    {liveQuote && (
-      <div className="w-full bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3.5 flex justify-center items-center gap-3">
-        <span className="text-sm font-bold text-logocolor font-mono">模型複雜度：</span>
-        {/* 模型複雜度=（SA/V 結構外殼佔比）： */}
-        <span className="font-mono font-bold text-cyan-400 text-sm">
-          {Math.round(liveQuote.debugShellFactor * 100)}%
-        </span>
-      </div>
-    )}
-  </div>
-)}
+                      {liveQuote && (
+                        <div className="w-full bg-[#1b2b28]/80 border border-[#2d423e] rounded-lg p-3.5 flex justify-center items-center gap-3">
+                          <span className="text-sm font-bold text-logocolor font-mono">模型複雜度：</span>
+                          <span className="font-mono font-bold text-cyan-400 text-sm">
+                            {Math.round(liveQuote.debugShellFactor * 100)}%
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="lg:col-span-5 flex flex-col justify-between gap-5 bg-[#101b19]/90 p-5 rounded-xl border border-[#2d423e]">
                   <div className="space-y-4">
                     <div>
                       <label className="block text-xs font-mono text-emerald-400 uppercase mb-1.5">[ 1. 選擇列印材質 ]</label>
-                      {/* <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto pr-1"> */}
                       <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-emerald-500/40 scrollbar-track-neutral-900">
                         {MATERIALS.map((mat) => (
                           <button key={mat.id} onClick={() => { setSelectedMaterialId(mat.id); setSelectedColor(mat.colors[0]); }} className={`text-left p-2.5 rounded-lg border ${selectedMaterialId === mat.id ? 'bg-amber-900/10 border-amber-400 text-logocolor' : 'bg-[#162421] border-[#2d423e] text-logocolor'}`}>
                             <div className="flex justify-between items-center mb-0.5">
-                            {/* <span className="font-bold text-xs">{mat.name}</span> */}
-                            {/* 💡 將你的自訂顏色類別套用在這裡 */}
-                            <h3 className={`${mat.textColor || 'text-customText'} font-bold text-xs`}>
-                              {mat.name}
-                            </h3>
-                            <span className="text-[11px] font-mono text-customText">NT$ {mat.costPerGram}/g</span></div>
-                            
+                              <h3 className={`${mat.textColor || 'text-customText'} font-bold text-xs`}>
+                                {mat.name}
+                              </h3>
+                              {/* <span className="text-[11px] font-mono text-customText">NT$ {mat.costPerGram}/g</span> */}
+                            </div>
                             <p className="text-[11px] text-logocolor/50">{mat.description}</p>
                           </button>
                         ))}
@@ -609,25 +648,31 @@ export default function AppOrder({ switchView }) {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-mono text-emerald-400 uppercase mb-1.5">[ 3. 訂購數量與報價 ]</label>
-                      <div className="flex items-center gap-2">
-                        <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-7 h-7 rounded bg-[#1b2b28] border border-[#2d423e] text-customText font-bold">-</button>
-                        {/* <input type="number" min="1" max="1000" value={quantity} onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))} 
-                        className="w-16 bg-amber-900/10 border border-amber-400 text-center text-customText font-mono text-xs rounded p-1.5" /> */}
-                        {/* 改用 div 顯示數量，完全沒有箭頭問題 */}
-                        <div className="w-16 h-8 flex items-center justify-center bg-amber-900/10 border border-amber-400 text-center text-customText font-mono text-xs rounded select-none">
-                          {quantity}
+                      <label className="block text-xs font-mono text-emerald-400 uppercase mb-1.5">[ 3. 訂購數量與加入訂單 ]</label>
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                          <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-7 h-7 rounded bg-[#1b2b28] border border-[#2d423e] text-customText font-bold">-</button>
+                          <div className="w-16 h-8 flex items-center justify-center bg-amber-900/10 border border-amber-400 text-center text-customText font-mono text-xs rounded select-none">
+                            {quantity}
+                          </div>
+                          <button onClick={() => setQuantity(quantity + 1)} className="w-7 h-7 rounded bg-[#1b2b28] border border-[#2d423e] text-customText font-bold">+</button>
                         </div>
-                        <button onClick={() => setQuantity(quantity + 1)} className="w-7 h-7 rounded bg-[#1b2b28] border border-[#2d423e] text-customText font-bold">+</button>
+
+                        <button 
+                          onClick={handleAddCurrentItemToOrder}
+                          className="flex-1 bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-black py-2 px-4 rounded shadow-lg transition-transform transform hover:scale-105 cursor-pointer"
+                        >
+                          加入訂單 +
+                        </button>
                       </div>
                     </div>
                     
                     {(() => {
                       const displayWeight = quote?.estimatedWeightGrams || 20; 
-                      const currentMat = MATERIALS.find((m) => m.id === selectedMaterialId);
-                      const costPerGram = currentMat?.costPerGram || 2.5;
+                      const singleWeight = singleItemQuote ? singleItemQuote.estimatedWeightGrams : displayWeight;
+                      const singleUnitPrice = singleItemQuote ? singleItemQuote.totalPrice : 200;
                       
-                      const rawTotalPrice = quote?.totalPrice || Math.round(displayWeight * quantity * costPerGram);
+                      const rawTotalPrice = quote?.totalPrice || 200;
                       const displayTotalPrice = Math.max(200, rawTotalPrice); 
                       const displayLeadDays = quote?.estimatedLeadDays || 3;
                       
@@ -635,27 +680,33 @@ export default function AppOrder({ switchView }) {
                         <div className="pt-0 space-y-3">
                           <div className="space-y-1 text-xs text-customText">
                             <div className="flex justify-between">
-                              <span className="text-customText">
-                                {quote ? '預估單件重量 / 總價:' : '預估單件重量 / 總價 (預設20g):'}
-                              </span>
-                              <span className="font-mono text-customText">{displayWeight}g · NT$ {displayTotalPrice.toLocaleString()}</span>
+                              <span className="text-customText">預估單件重量 / 單價:</span>
+                              <span className="font-mono text-customText">{singleWeight}g · NT$ {singleUnitPrice.toLocaleString()}</span>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-customText">預估製作天數:</span>
                               <span className="font-mono text-customText">約 {displayLeadDays} 個工作天</span>
                             </div>
+                            {orderItems.length > 0 && (
+                              // <div className="text-[11px] text-amber-400 pt-1">
+                              //   已加入累積品項：{orderItems.length} 個模型 (共 {totalAccumulatedCount} 件)
+                              // </div>
+                              <div className="text-[11px] text-amber-400 pt-1">
+                                已加入累積品項：{orderItems.length > 0 ? new Set(orderItems.map(item => item.fileName)).size : 1} 個模型 (共 {totalAccumulatedCount} 件)
+                              </div>
+                            )}
                           </div>
 
                           <div className="bg-amber-900/10 border border-amber-400/30 rounded-xl p-3 flex justify-between items-center">
                             <div>
                               <span className="block text-[10px] font-mono text-customText uppercase">
-                                總計預估金額 {rawTotalPrice < 200 ? '(含最低基本費)' : '(含稅)'}
+                                此模型預估金額 (含稅)
                               </span>
                               <span className="text-xl font-black text-amber-400 font-mono">
                                 NT$ {displayTotalPrice.toLocaleString()}
                               </span>
                             </div>
-                            <span className="text-xs text-customText font-mono">({quantity} 件)</span>
+                            <span className="text-xs text-customText font-mono">{quantity} 件</span>
                           </div>                          
                         </div>
                       );
@@ -666,13 +717,24 @@ export default function AppOrder({ switchView }) {
                       <input type="text" placeholder="您的稱呼 *" value={contactForm.name} onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })} className="bg-[#182624] border border-[#2d423e] rounded p-2 text-xs text-customText" />
                       <input type="text" placeholder="聯絡電話 / Line *" value={contactForm.phone} onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })} className="bg-[#182624] border border-[#2d423e] rounded p-2 text-xs text-customText" />
                     </div>
-                    <div className="grid grid-cols-2 gap-2 pt-1">
-                      <button onClick={copyQuoteSummary} className="w-full bg-[#1b2b28] text-customText text-[11px] font-semibold py-2 px-2 rounded border border-[#2d423e]">
-                        {copied ? '✓ 已複製規格' : '複製報價規格'}
-                      </button>
+                    <div className="grid grid-cols-1 gap-2 pt-1">
+                      <div className="bg-[#1b2b28] border border-emerald-500/90 rounded-lg p-3 flex justify-between items-center">
+                        <div>
+                          <span className="block text-[10px] font-mono text-customText uppercase">累積總金額及件數 (含稅)</span>
+                          <span className="text-lg font-black text-highlight font-mono">
+                            NT$ {totalAccumulatedAmount.toLocaleString()}
+                          </span>
+                        </div>
+                        {/* <span className="text-xs font-mono text-customText">
+                          (共 {totalAccumulatedCount} 件 / {orderItems.length > 0 ? orderItems.length : 1} 個模型)
+                        </span> */}
+                        <span className="text-xs font-mono text-customText">
+                          共 {totalAccumulatedCount} 件 / {orderItems.length > 0 ? new Set(orderItems.map(item => item.fileName)).size : 1} 個模型
+                        </span>
+                      </div>
+
                       <button onClick={handleFinalSubmitOrder} disabled={submittingOrder} 
-                      className="w-full bg-emerald-500 hover:bg-emerald-400 text-customText text-[11px] font-black py-2 px-2 rounded">
-                      {/* className="px-8 py-3 bg-emerald-500 text-black text-sm md:text-base font-semibold rounded-full hover:bg-emerald-400 hover:text-[#C5B9AC] shadow-xl transition-all transform hover:scale-105 cursor-pointer pointer-events-auto"> */}
+                      className="w-full bg-emerald-500 hover:bg-emerald-400 text-customText text-[15px] font-black py-2.5 px-2 rounded cursor-pointer">
                         {submittingOrder ? '上傳中...' : '確認送出訂單 →'}
                       </button>
                     </div>
@@ -688,7 +750,6 @@ export default function AppOrder({ switchView }) {
           <div className="space-y-6 bg-[#101b19]/50 border border-[#2d423e] rounded-2xl p-6 md:p-8">
             <div className="border-b border-[#2d423e] pb-4">
               <h3 className="text-lg font-bold text-highlight">進度查詢</h3>
-              {/* <p className="text-xs text-logocolor/50 mt-1">請輸入您的訂單編號或手機號碼以查詢最新進度。</p> */}
             </div>
 
             <form onSubmit={(e) => { e.preventDefault(); executeSearch(searchKey.trim()); }} className="flex gap-3">
@@ -713,25 +774,36 @@ export default function AppOrder({ switchView }) {
               <div className="mt-6 space-y-4">
                 {searchResult && searchResult.length > 0 ? (
                   <div className="space-y-4">
-                    {searchResult.map((order, idx) => (
-                      <div key={idx} className="bg-[#101b19] border border-[#2d423e] rounded-xl p-5 space-y-3 font-mono text-xs">
-                        <div className="flex justify-between items-center border-b border-[#2d423e] pb-2">
-                          <span className="text-amber-400 font-bold text-sm">訂單編號：{order.order_no}</span>
-                          {getStatusBadge(order.status)}
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-customText">
-                          <div>客戶名稱：<span className="text-customText">{order.name}</span></div>
-                          <div>聯絡電話：<span className="text-customText">{order.phone}</span></div>
-                          <div>選擇材質：<span className="text-customText">{order.material_type}</span></div>
-                          <div>模型檔案：<span className="text-customText">{maskFileName(order.file_name)}</span></div>
-                        </div>
-                        {order.purpose && (
-                          <div className="text-customText pt-1 border-t border-[#2d423e]/50">
-                            備註需求：{order.purpose}
+                    {searchResult.map((order, idx) => {
+                      const uniqueFileNamesList = order.file_name 
+                        ? Array.from(new Set(order.file_name.split(/[,;]/).map(n => n.trim()).filter(Boolean))).join(', ') 
+                        : '無';
+
+                      return (
+                        <div key={idx} className="bg-[#101b19] border border-[#2d423e] rounded-xl p-5 space-y-3 font-mono text-xs">
+                          <div className="flex justify-between items-center border-b border-[#2d423e] pb-2">
+                            <span className="text-amber-400 font-bold text-sm">訂單編號：{order.order_no}</span>
+                            {getStatusBadge(order.status)}
                           </div>
-                        )}
-                      </div>
-                    ))}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-customText">
+                            <div>客戶名稱：<span className="text-customText">{order.name}</span></div>
+                            <div>聯絡電話：<span className="text-customText">{order.phone}</span></div>
+                            <div className="md:col-span-2">模型檔案：<span className="text-highlight font-bold">{uniqueFileNamesList}</span></div>
+                          </div>
+                          
+                          {order.purpose && (
+                            <div className="text-customText pt-2 border-t border-[#2d423e]/50 space-y-2">
+                              <div className="text-emerald-400 font-bold uppercase tracking-wider text-[11px]">📋 訂單明細內容：</div>
+                              <div className="bg-[#162421]/60 border border-[#2d423e] rounded-lg p-3 space-y-1.5 text-xs">
+                                <div className="whitespace-pre-wrap leading-relaxed text-customText font-sans">
+                                  {order.purpose}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="p-8 text-center bg-[#101b19] border border-[#2d423e] rounded-xl text-customText font-mono text-xs">

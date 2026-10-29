@@ -18,6 +18,7 @@ module.exports = {
         customText: '#c5b9ac', // #e6ddd2
         highlight: '#eaa486',
         logocolor: '#839794',
+        greygrey: '#75817f',
       },
     },
   },
