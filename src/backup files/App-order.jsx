@@ -7,6 +7,8 @@ import occtimportjs from 'occt-import-js';
 import { CrafterModel } from './CrafterModel';
 import { supabase } from './supabaseClient';
 
+const LOWEST_PRICE = 200; // 💡 需求 1：將最低金額獨立出來為常數，方便日後調整
+
 const MATERIALS = [
   {
     id: 'pla',
@@ -42,67 +44,133 @@ const PRESET_MODELS = [
   { name: '網站測試用模型.stl', path: './models/website3dtest.stl' },
 ];
 
-// 計算報價公式
-function calculateQuote(analysis, materialId, infill, layerHeight, quantity) {
+// 計算單一模型的基礎報價
+function calculateItemQuote(analysis, materialId, infill, layerHeight, quantity) {
   const material = MATERIALS.find(m => m.id === materialId) || MATERIALS[0];
   const density = 1.25;
   const infillRatio = infill / 100;
 
-  // const saRatio = analysis.surfaceAreaCm2 / Math.max(0.01, analysis.volumeCm3);  
-  // const calculatedShellFactor = saRatio * 0.15;
-  // const shellFactor = Math.max(0.05, Math.min(0.85, calculatedShellFactor));
-
-  // 💡 修正複雜度計算：綜合考量「表面積體積比」與「面數密度」，並設定合理上限
   const saRatio = analysis.surfaceAreaCm2 / Math.max(0.01, analysis.volumeCm3);
-  
-  // 針對扁平或小體積物件進行權重平滑，避免表面積比過大導致誤判
   let calculatedShellFactor = (saRatio * 0.10) * Math.min(1.0, analysis.volumeCm3 / 50);
   
-  // 如果面數很少（代表幾何很平滑簡單），直接給予較低的基礎複雜度
   if (analysis.triangleCount < 2000) {
     calculatedShellFactor = Math.min(calculatedShellFactor, 0.25);
   }
 
-  // shellFactor 被限制在 0.10 到 0.75 之間（即複雜度 10% 到 75%）
   const shellFactor = Math.max(0.10, Math.min(0.75, calculatedShellFactor));
-
   const effectiveVolume = analysis.volumeCm3 * (shellFactor + (1 - shellFactor) * infillRatio);
   const estimatedWeightGrams = Math.max(5, Math.round(effectiveVolume * density * 10) / 10);
 
-  // 建立「複雜度價格係數」1.5
-  // 例如：當複雜度(shellFactor)為 0% 時係數為 1.0（不加價），當複雜度為100%且係數為1.5時，單價可增加為2.5倍  
-  const complexityMultiplier = 1.0 + (shellFactor * 1.5); // 調高最後這個數值來使得複雜度對價格的影響更強烈
-
-  // 3. 💡 將係數乘入 rawCost 中
+  const ComplexityPriceFactor = 1.5;
+  const complexityMultiplier = 1.0 + (shellFactor * ComplexityPriceFactor);
   const rawCost = estimatedWeightGrams * material.costPerGram * complexityMultiplier;
-
 
   const baseHandlingFee = 150;
   const layerFactor = layerHeight <= 0.15 ? 1.3 : 1.0;
 
-  const unitPrice = Math.round(Math.max(200, (rawCost + baseHandlingFee) * layerFactor));
+  // 使用 LOWEST_PRICE 做為最低單價保底
+  const unitPrice = Math.round(Math.max(LOWEST_PRICE, (rawCost + baseHandlingFee) * layerFactor));
 
-  let discountRate = 0;
-  if (quantity >= 50) discountRate = 0.20;
-  else if (quantity >= 20) discountRate = 0.15;
-  else if (quantity >= 10) discountRate = 0.10;
-  else if (quantity >= 5) discountRate = 0.05;
+  let itemFinalPrice = 0;
+  let subtotal = unitPrice * quantity;
 
-  const subtotal = unitPrice * quantity;
-  const discountAmount = Math.round(subtotal * discountRate);
-  const totalPrice = subtotal - discountAmount;
+  for (let i = 1; i <= quantity; i++) {
+    let rate = 1.0;
+    if (i === 2) rate = 0.50;      // 第 2 個 5 折
+    else if (i === 3) rate = 0.40; // 第 3 個 4 折
+    else if (i === 4) rate = 0.30; // 第 4 個 3 折
+    else if (i >= 5) rate = 0.20;  // 第 5 個起 2 折
+
+    itemFinalPrice += Math.round(unitPrice * rate);
+  }
+
+  if (unitPrice === LOWEST_PRICE && quantity === 1) {
+    itemFinalPrice = LOWEST_PRICE;
+  }
+
+  const discountAmount = Math.max(0, subtotal - itemFinalPrice);
+  const avgDiscountRate = subtotal > 0 ? discountAmount / subtotal : 0;
+
   const estimatedLeadDays = Math.max(1, Math.ceil((estimatedWeightGrams * quantity) / 500));
-  const debugShellFactor = Math.round(shellFactor * 100) / 100;
+  const debugShellFactor = Math.round(shellFactor * 100) / 100; 
 
   return {
     estimatedWeightGrams,
     unitPrice,
     subtotal,
-    discountRate,
+    itemDiscountRate: avgDiscountRate,
     discountAmount,
-    totalPrice,
+    itemFinalPrice,
     estimatedLeadDays,
     debugShellFactor,
+  };
+}
+
+// 💡 需求 2：處理購物車中不同最低金額模型的全域階梯計價串聯
+function getAdjustedOrderItems(orderItems) {
+  if (!orderItems || orderItems.length === 0) return [];
+  
+  let lowestPriceUnitCounter = 0;
+  
+  return orderItems.map(item => {
+    if (item.unitPrice === LOWEST_PRICE) {
+      let itemTotalFinalPrice = 0;
+      for (let q = 0; q < item.quantity; q++) {
+        lowestPriceUnitCounter++;
+        let rate = 1.0;
+        if (lowestPriceUnitCounter === 2) rate = 0.50;      // 第 2 件 5 折
+        else if (lowestPriceUnitCounter === 3) rate = 0.40; // 第 3 件 4 折
+        else if (lowestPriceUnitCounter === 4) rate = 0.30; // 第 4 件 3 折
+        else if (lowestPriceUnitCounter >= 5) rate = 0.20;  // 第 5 件起 2 折
+        
+        itemTotalFinalPrice += Math.round(LOWEST_PRICE * rate);
+      }
+      if (item.quantity === 1 && lowestPriceUnitCounter === 1 && itemTotalFinalPrice < LOWEST_PRICE) {
+        itemTotalFinalPrice = LOWEST_PRICE;
+      }
+      return {
+        ...item,
+        itemFinalPrice: itemTotalFinalPrice
+      };
+    } else {
+      return item;
+    }
+  });
+}
+
+// 計算整筆購物車的總結算資訊
+function calculateCartSummary(orderItems, currentItemQuote, currentQuantity) {
+  const adjustedItems = getAdjustedOrderItems(orderItems);
+  
+  let totalQty = 0;
+  let subtotalSum = 0;
+  let uniqueModelCount = 0;
+
+  if (adjustedItems && adjustedItems.length > 0) {
+    totalQty = adjustedItems.reduce((acc, item) => acc + item.quantity, 0);
+    subtotalSum = adjustedItems.reduce((acc, item) => acc + item.itemFinalPrice, 0);
+    uniqueModelCount = new Set(adjustedItems.map(item => item.fileName)).size;
+  } else if (currentItemQuote) {
+    totalQty = currentQuantity;
+    subtotalSum = currentItemQuote.itemFinalPrice;
+    uniqueModelCount = 1;
+  }
+
+  let orderDiscountRate = 0;
+  if (uniqueModelCount >= 2 && totalQty > 1) {
+    orderDiscountRate = Math.min(0.50, (totalQty - 1) * 0.005);
+  }
+
+  const orderDiscountAmount = Math.round(subtotalSum * orderDiscountRate);
+  const finalTotalPrice = subtotalSum - orderDiscountAmount;
+
+  return {
+    totalQty,
+    subtotalSum,
+    uniqueModelCount,
+    orderDiscountRate,
+    orderDiscountAmount,
+    finalTotalPrice
   };
 }
 
@@ -117,7 +185,8 @@ export default function AppOrder({ switchView }) {
   const [uploadedFileObj, setUploadedFileObj] = useState(null);
 
   const [analysis, setAnalysis] = useState(null);
-  const [quote, setQuote] = useState(null);
+  const [liveQuote, setLiveQuote] = useState(null);
+  const [singleItemQuote, setSingleItemQuote] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isTransparent, setIsTransparent] = useState(false);
 
@@ -128,8 +197,7 @@ export default function AppOrder({ switchView }) {
   const [quantity, setQuantity] = useState(1);
 
   const [orderItems, setOrderItems] = useState([]);
-  const [manualAccumulatedAmount, setManualAccumulatedAmount] = useState(0);
-  const [manualAccumulatedCount, setManualAccumulatedCount] = useState(0);
+  const adjustedOrderItems = getAdjustedOrderItems(orderItems);
 
   const [contactForm, setContactForm] = useState({ name: '', phone: '', purpose: '' });
   const [submittingOrder, setSubmittingOrder] = useState(false);
@@ -146,8 +214,6 @@ export default function AppOrder({ switchView }) {
   const [historyLoading, setHistoryLoading] = useState(false);
 
   const selectedMaterial = MATERIALS.find((m) => m.id === selectedMaterialId) || MATERIALS[0];
-  const liveQuote = analysis ? calculateQuote(analysis, selectedMaterialId, infill, layerHeight, quantity) : null;
-  const singleItemQuote = analysis ? calculateQuote(analysis, selectedMaterialId, infill, layerHeight, 1) : null;
 
   useEffect(() => {
     occtimportjs({
@@ -223,8 +289,10 @@ export default function AppOrder({ switchView }) {
 
   useEffect(() => {
     if (!analysis) return;
-    const newQuote = calculateQuote(analysis, selectedMaterialId, infill, layerHeight, quantity);
-    setQuote(newQuote);
+    const itemQ = calculateItemQuote(analysis, selectedMaterialId, infill, layerHeight, quantity);
+    const singleQ = calculateItemQuote(analysis, selectedMaterialId, infill, layerHeight, 1);
+    setLiveQuote(itemQ);
+    setSingleItemQuote(singleQ);
   }, [analysis, selectedMaterialId, infill, layerHeight, quantity]);
 
   const handleAnalysisComplete = (analysisRes, heightY, maxDim = 100) => {
@@ -273,38 +341,46 @@ export default function AppOrder({ switchView }) {
     }
   };
 
-  // 💡 移除檔名重複檢查，允許持續累積相同檔名的數量與價格
   const handleAddCurrentItemToOrder = () => {
-    const currentPrice = liveQuote ? liveQuote.totalPrice : 200;
-    const currentQty = quantity;
+    if (!liveQuote) return;
     const currentMat = MATERIALS.find((m) => m.id === selectedMaterialId);
     
     const newItem = {
       id: Date.now(),
       fileName: currentFileName,
       fileObj: uploadedFileObj,
+      materialId: selectedMaterialId,
       materialName: currentMat?.name || selectedMaterialId,
       color: selectedColor,
       layerHeight,
       infill,
-      quantity: currentQty,
-      totalPrice: currentPrice,
+      quantity,
+      unitPrice: liveQuote.unitPrice,
+      itemFinalPrice: liveQuote.itemFinalPrice,
+      estimatedWeightGrams: liveQuote.estimatedWeightGrams,
+      estimatedLeadDays: liveQuote.estimatedLeadDays
     };
 
     setOrderItems(prev => [...prev, newItem]);
-    setManualAccumulatedAmount(prev => prev + currentPrice);
-    setManualAccumulatedCount(prev => prev + currentQty);
-    
     alert(`已成功將 ${currentFileName} 加入此筆訂單！`);
   };
 
-  const totalAccumulatedAmount = orderItems.length > 0 
-    ? manualAccumulatedAmount 
-    : (liveQuote ? liveQuote.totalPrice : 200);
+  const handleRemoveOrderItem = (itemId) => {
+    setOrderItems(prev => prev.filter(item => item.id !== itemId));
+  };
 
-  const totalAccumulatedCount = orderItems.length > 0 
-    ? manualAccumulatedCount 
-    : quantity;
+  // 💡 需求 2 附加：點擊已加入購物車品項時，回溯載入該模型的預覽與對應參數
+  const handleSelectCartItem = (item) => {
+    setCurrentFileName(item.fileName);
+    setUploadedFileObj(item.fileObj || null);
+    setSelectedMaterialId(item.materialId || 'pla');
+    setSelectedColor(item.color || '純白');
+    setLayerHeight(item.layerHeight);
+    setInfill(item.infill);
+    setQuantity(item.quantity);
+  };
+
+  const cartSummary = calculateCartSummary(orderItems, liveQuote, orderItems.length === 0 ? quantity : 0);
 
   const handleFinalSubmitOrder = async () => {
     if (!contactForm.name.trim() || !contactForm.phone.trim()) {
@@ -312,7 +388,7 @@ export default function AppOrder({ switchView }) {
       return;
     }
 
-    let finalItems = [...orderItems];
+    let finalItems = getAdjustedOrderItems(orderItems);
     if (finalItems.length === 0 && liveQuote) {
       const currentMat = MATERIALS.find((m) => m.id === selectedMaterialId);
       finalItems.push({
@@ -324,7 +400,10 @@ export default function AppOrder({ switchView }) {
         layerHeight,
         infill,
         quantity,
-        totalPrice: liveQuote.totalPrice,
+        unitPrice: liveQuote.unitPrice,
+        itemFinalPrice: liveQuote.itemFinalPrice,
+        estimatedWeightGrams: liveQuote.estimatedWeightGrams,
+        estimatedLeadDays: liveQuote.estimatedLeadDays
       });
     }
 
@@ -384,18 +463,16 @@ export default function AppOrder({ switchView }) {
         }
       }
 
-      // 💡 明細內容中包含層高與填充資訊
+      const tempSummary = calculateCartSummary(orderItems.length > 0 ? orderItems : finalItems, orderItems.length > 0 ? null : liveQuote, orderItems.length > 0 ? 0 : quantity);
+
       const detailedPurposeSummary = finalItems.map((item, idx) => 
-        `[${idx + 1}] 檔名: ${item.fileName} | 材質: ${item.materialName} | 顏色: ${item.color} | 層高: ${item.layerHeight}mm | 填充: ${item.infill}% | 數量: ${item.quantity}件 | 金額: NT$ ${item.totalPrice.toLocaleString()}`
+        `[${idx + 1}] 檔名: ${item.fileName} | 材質: ${item.materialName} | 顏色: ${item.color} | 層高: ${item.layerHeight}mm | 填充: ${item.infill}% | 數量: ${item.quantity}件 | 折後小計: NT$ ${item.itemFinalPrice.toLocaleString()}`
       ).join('\n');
 
       const primaryMaterial = finalItems[0].materialName + ' (' + finalItems[0].color + ')';
       const uniqueFileNames = Array.from(new Set(uploadedFileNames)).join(', ');
 
-      const grandTotalAmount = finalItems.reduce((acc, curr) => acc + curr.totalPrice, 0);
-      const grandTotalCount = finalItems.reduce((acc, curr) => acc + curr.quantity, 0);
-
-      const fullPurposeText = `${contactForm.purpose.trim() ? contactForm.purpose.trim() + '\n' : ''}--- 報價明細 ---:\n${detailedPurposeSummary}\n-------------------\n總件數: ${grandTotalCount} 件 | 總金額: NT$ ${grandTotalAmount.toLocaleString()}`;
+      const fullPurposeText = `${contactForm.purpose.trim() ? contactForm.purpose.trim() + '\n' : ''}--- 報價明細 ---:\n${detailedPurposeSummary}\n-------------------\n總件數: ${tempSummary.totalQty} 件 | 總金額: NT$ ${tempSummary.finalTotalPrice.toLocaleString()}`;
 
       const payload = {
         order_no: orderNo,
@@ -437,10 +514,10 @@ export default function AppOrder({ switchView }) {
         
         <div className="border-b pb-0 border-neutral-800 text-center md:text-left">
           <span className="text-emerald-400 font-mono text-xs tracking-widest uppercase block mb-1">
-            ONLINE 3D MODEL PREVIEW &amp; INSTANT QUOTE
+            ONLINE 3D MODEL PREVIEW &amp; INSTANT ORDER
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-[#839794] tracking-tight">
-            零接觸報價系統
+            零接觸訂單系統 <span className="text-sm text-[#839794]" >- Zero Contact </span>
           </h2>
           <p className="text-customText text-xs md:text-sm mb-6">上傳3D檔案、即時報價、送出訂單、查詢進度</p>
         </div>
@@ -448,7 +525,7 @@ export default function AppOrder({ switchView }) {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-neutral-800 pb-3 gap-4">
           <div className="flex gap-6 font-mono text-xs md:text-sm">
             <button onClick={() => setActiveTab('create')} className={`pb-1 cursor-pointer border-b-2 ${activeTab === 'create' ? 'border-emerald-400 text-emerald-400 font-bold' : 'border-transparent text-[#839794]'}`}>3D預覽即時估價下單</button>
-            <button onClick={() => setActiveTab('search')} className={`pb-1 cursor-pointer border-b-2 ${activeTab === 'search' ? 'border-emerald-400 text-emerald-400 font-bold' : 'border-transparent text-[#839794]'}`}>訂單處理進度查詢</button>
+            <button onClick={() => setActiveTab('search')} className={`pb-1 cursor-pointer border-b-2 ${activeTab === 'search' ? 'border-emerald-400 text-emerald-400 font-bold' : 'border-transparent text-[#839794]'}`}>訂單明細進度查詢</button>
             <button onClick={() => setActiveTab('history')} className={`pb-1 cursor-pointer border-b-2 ${activeTab === 'history' ? 'border-emerald-400 text-emerald-400 font-bold' : 'border-transparent text-[#839794]'}`}>即時排單看板</button>
           </div>
           <div className="font-mono text-xs">
@@ -475,8 +552,6 @@ export default function AppOrder({ switchView }) {
                       setSubmitted(false);
                       setUploadedFileObj(null);
                       setOrderItems([]);
-                      setManualAccumulatedAmount(0);
-                      setManualAccumulatedCount(0);
                       setQuantity(1);
                       setContactForm({ name: '', phone: '', purpose: '' });
                     }}
@@ -510,7 +585,8 @@ export default function AppOrder({ switchView }) {
                       載入3D模型
                     </button>
                     <input ref={fileInputRef} type="file" accept=".stl,.obj,.3mf,.step,.stp" className="hidden" onChange={(e) => e.target.files?.[0] && handleFileSelected(e.target.files[0])} />
-                    <span className="text-xs font-mono text-customText">註:送出訂單才會上傳檔案</span>
+                    <span className="text-xs font-mono text-customText">註1:送出訂單才會上傳檔案</span>
+                    <span className="text-xs font-mono text-customText">註2:格線範圍就是可一次成型範圍</span>
                   </div>
 
                   <div onDragOver={(e) => e.preventDefault()} onDrop={onDrop} className="relative w-full h-[380px] md:h-[440px] rounded-xl overflow-hidden border border-[#2d423e]">
@@ -607,7 +683,6 @@ export default function AppOrder({ switchView }) {
                               <h3 className={`${mat.textColor || 'text-customText'} font-bold text-xs`}>
                                 {mat.name}
                               </h3>
-                              {/* <span className="text-[11px] font-mono text-customText">NT$ {mat.costPerGram}/g</span> */}
                             </div>
                             <p className="text-[11px] text-logocolor/50">{mat.description}</p>
                           </button>
@@ -667,14 +742,41 @@ export default function AppOrder({ switchView }) {
                       </div>
                     </div>
                     
+                    {/* 已加入訂單品項清單：點擊可回溯模型與參數 (需求2)，並使用統一的滾動條樣式 (需求3) */}
+                    {adjustedOrderItems.length > 0 && (
+                      <div className="bg-[#162421] border border-[#2d423e] rounded-lg p-3 space-y-2">
+                        <div className="text-xs font-bold text-emerald-400">已加入訂單的品項 ({adjustedOrderItems.length})：</div>
+                        <div className="space-y-1.5 max-h-32 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-emerald-500/40 scrollbar-track-neutral-900">
+                          {adjustedOrderItems.map((item) => (
+                            <div 
+                              key={item.id} 
+                              onClick={() => handleSelectCartItem(item)}
+                              className="flex justify-between items-center text-[11px] bg-[#101b19] p-2 rounded border border-[#2d423e] hover:border-emerald-400 cursor-pointer transition-colors"
+                              title="點擊以回到此模型預覽與參數設定"
+                            >
+                              <span className="text-customText truncate max-w-[150px]">{item.fileName} ({item.quantity}件)</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-amber-400 font-mono">NT$ {item.itemFinalPrice}</span>
+                                <button 
+                                  onClick={(e) => { e.stopPropagation(); handleRemoveOrderItem(item.id); }} 
+                                  className="text-red-400 hover:text-red-300 font-bold px-1"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     {(() => {
-                      const displayWeight = quote?.estimatedWeightGrams || 20; 
+                      const displayWeight = liveQuote?.estimatedWeightGrams || 20; 
                       const singleWeight = singleItemQuote ? singleItemQuote.estimatedWeightGrams : displayWeight;
-                      const singleUnitPrice = singleItemQuote ? singleItemQuote.totalPrice : 200;
+                      const singleUnitPrice = singleItemQuote ? singleItemQuote.unitPrice : LOWEST_PRICE;
                       
-                      const rawTotalPrice = quote?.totalPrice || 200;
-                      const displayTotalPrice = Math.max(200, rawTotalPrice); 
-                      const displayLeadDays = quote?.estimatedLeadDays || 3;
+                      const itemFinalPrice = liveQuote?.itemFinalPrice || LOWEST_PRICE;
+                      const displayLeadDays = liveQuote?.estimatedLeadDays || 3;
                       
                       return (
                         <div className="pt-0 space-y-3">
@@ -687,23 +789,15 @@ export default function AppOrder({ switchView }) {
                               <span className="text-customText">預估製作天數:</span>
                               <span className="font-mono text-customText">約 {displayLeadDays} 個工作天</span>
                             </div>
-                            {orderItems.length > 0 && (
-                              // <div className="text-[11px] text-amber-400 pt-1">
-                              //   已加入累積品項：{orderItems.length} 個模型 (共 {totalAccumulatedCount} 件)
-                              // </div>
-                              <div className="text-[11px] text-amber-400 pt-1">
-                                已加入累積品項：{orderItems.length > 0 ? new Set(orderItems.map(item => item.fileName)).size : 1} 個模型 (共 {totalAccumulatedCount} 件)
-                              </div>
-                            )}
                           </div>
 
                           <div className="bg-amber-900/10 border border-amber-400/30 rounded-xl p-3 flex justify-between items-center">
                             <div>
                               <span className="block text-[10px] font-mono text-customText uppercase">
-                                此模型預估金額 (含稅)
+                                此模型折後金額 (含稅)
                               </span>
                               <span className="text-xl font-black text-amber-400 font-mono">
-                                NT$ {displayTotalPrice.toLocaleString()}
+                                NT$ {itemFinalPrice.toLocaleString()}
                               </span>
                             </div>
                             <span className="text-xs text-customText font-mono">{quantity} 件</span>
@@ -720,16 +814,14 @@ export default function AppOrder({ switchView }) {
                     <div className="grid grid-cols-1 gap-2 pt-1">
                       <div className="bg-[#1b2b28] border border-emerald-500/90 rounded-lg p-3 flex justify-between items-center">
                         <div>
-                          <span className="block text-[10px] font-mono text-customText uppercase">累積總金額及件數 (含稅)</span>
+                          <span className="block text-[10px] font-mono text-customText uppercase">總件數與折後總金額 (含稅)</span>
                           <span className="text-lg font-black text-highlight font-mono">
-                            NT$ {totalAccumulatedAmount.toLocaleString()}
+                            NT$ {cartSummary.finalTotalPrice.toLocaleString()}
                           </span>
                         </div>
-                        {/* <span className="text-xs font-mono text-customText">
-                          (共 {totalAccumulatedCount} 件 / {orderItems.length > 0 ? orderItems.length : 1} 個模型)
-                        </span> */}
+                        {/* 💡 需求 3：將數量顯示格式改回「*個模型共*件」 */}
                         <span className="text-xs font-mono text-customText">
-                          共 {totalAccumulatedCount} 件 / {orderItems.length > 0 ? new Set(orderItems.map(item => item.fileName)).size : 1} 個模型
+                          {cartSummary.uniqueModelCount} 個模型共 {cartSummary.totalQty} 件
                         </span>
                       </div>
 

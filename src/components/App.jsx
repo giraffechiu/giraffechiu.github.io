@@ -209,6 +209,13 @@ export default function App() {
         </nav>
       </div>
 
+      {/* 底部版權宣告 */}
+      <div className="absolute bottom-0 left-0 w-full z-50 flex items-center justify-between px-6 md:px-12 py-1">        
+          <h1 className="text-xs md:text-sm tracking-widest font-mono text-[#839794] hover:text-[#C5B9AC] transition-colors hidden sm:block">
+            © 2026 3d砌作 All Rights Reserved
+          </h1>        
+      </div>
+
       {/* 2. 背景圖片浮水印 */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden px-4">
         <img 
