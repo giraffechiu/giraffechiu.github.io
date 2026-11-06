@@ -11,7 +11,12 @@
     "title": "代工列印・小量 (PLA)",
     "dimensions": "95 × 95 × 40 mm",
     "printTime": "3h 36m",
-    "image": "/gallery/case_1c447e50.webp"
+    "image": "/gallery/case_1c447e50.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_a426dc3c",
@@ -25,7 +30,12 @@
     "title": "代工列印・小量 (TPE80A)",
     "dimensions": "95 × 95 × 40 mm",
     "printTime": "5h 36m",
-    "image": "/gallery/case_a426dc3c.webp"
+    "image": "/gallery/case_a426dc3c.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_d83db5d7",
@@ -39,7 +49,12 @@
     "title": "代工列印・小量 (TPE80A)",
     "dimensions": "95 × 95 × 40 mm",
     "printTime": "7h 18m",
-    "image": "/gallery/case_d83db5d7.webp"
+    "image": "/gallery/case_d83db5d7.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_ccb2a424",
@@ -53,7 +68,12 @@
     "title": "代工列印・小量 (TPE80A)",
     "dimensions": "95 × 95 × 40 mm",
     "printTime": "3h 24m",
-    "image": "/gallery/case_ccb2a424.webp"
+    "image": "/gallery/case_ccb2a424.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_d607057b",
@@ -67,7 +87,12 @@
     "title": "代工列印・小量 (TPU90A)",
     "dimensions": "95 × 95 × 40 mm",
     "printTime": "5h 36m",
-    "image": "/gallery/case_d607057b.webp"
+    "image": "/gallery/case_d607057b.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_40f445e1",
@@ -81,7 +106,12 @@
     "title": "代工列印・樣品 (PETG-CF)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "5h 12m",
-    "image": "/gallery/case_40f445e1.webp"
+    "image": "/gallery/case_40f445e1.webp",
+    "isAnimated": false,
+    "width": 911,
+    "height": 1200,
+    "aspectRatio": 0.76,
+    "orientation": "portrait"
   },
   {
     "id": "case_7cf769c4",
@@ -95,7 +125,12 @@
     "title": "代工列印・樣品 (PLA)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "6h 24m",
-    "image": "/gallery/case_7cf769c4.webp"
+    "image": "/gallery/case_7cf769c4.webp",
+    "isAnimated": false,
+    "width": 900,
+    "height": 1200,
+    "aspectRatio": 0.75,
+    "orientation": "portrait"
   },
   {
     "id": "case_c20f7af8",
@@ -109,7 +144,12 @@
     "title": "代工列印・樣品 (PLA)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "8h 12m",
-    "image": "/gallery/case_c20f7af8.webp"
+    "image": "/gallery/case_c20f7af8.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_2a9771cc",
@@ -123,7 +163,12 @@
     "title": "代工列印・樣品 (PLA)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "4h 0m",
-    "image": "/gallery/case_2a9771cc.webp"
+    "image": "/gallery/case_2a9771cc.webp",
+    "isAnimated": false,
+    "width": 900,
+    "height": 1200,
+    "aspectRatio": 0.75,
+    "orientation": "portrait"
   },
   {
     "id": "case_d20de086",
@@ -137,7 +182,12 @@
     "title": "代工列印・樣品 (PLA)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "5h 48m",
-    "image": "/gallery/case_d20de086.webp"
+    "image": "/gallery/case_d20de086.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_17527a2c",
@@ -151,7 +201,12 @@
     "title": "代工列印・樣品 (PLA)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "7h 36m",
-    "image": "/gallery/case_17527a2c.webp"
+    "image": "/gallery/case_17527a2c.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_cdabf19e",
@@ -165,7 +220,12 @@
     "title": "代工列印・樣品 (PLA)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "9h 24m",
-    "image": "/gallery/case_cdabf19e.webp"
+    "image": "/gallery/case_cdabf19e.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_d02258cb",
@@ -179,7 +239,12 @@
     "title": "代工列印・樣品 (PLA)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "4h 48m",
-    "image": "/gallery/case_d02258cb.webp"
+    "image": "/gallery/case_d02258cb.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_13f41264",
@@ -193,7 +258,12 @@
     "title": "代工列印・樣品 (PLA)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "6h 6m",
-    "image": "/gallery/case_13f41264.webp"
+    "image": "/gallery/case_13f41264.webp",
+    "isAnimated": false,
+    "width": 900,
+    "height": 1200,
+    "aspectRatio": 0.75,
+    "orientation": "portrait"
   },
   {
     "id": "case_b83da363",
@@ -207,7 +277,12 @@
     "title": "代工列印・樣品 (PLA)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "3h 0m",
-    "image": "/gallery/case_b83da363.webp"
+    "image": "/gallery/case_b83da363.webp",
+    "isAnimated": false,
+    "width": 900,
+    "height": 1200,
+    "aspectRatio": 0.75,
+    "orientation": "portrait"
   },
   {
     "id": "case_e25f558d",
@@ -221,7 +296,12 @@
     "title": "代工列印・樣品 (PLA)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "4h 24m",
-    "image": "/gallery/case_e25f558d.webp"
+    "image": "/gallery/case_e25f558d.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_f0279d9a",
@@ -235,7 +315,12 @@
     "title": "代工列印・樣品 (PLA)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "5h 42m",
-    "image": "/gallery/case_f0279d9a.webp"
+    "image": "/gallery/case_f0279d9a.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_6ab4f579",
@@ -249,7 +334,12 @@
     "title": "代工列印・樣品 (PLA)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "7h 0m",
-    "image": "/gallery/case_6ab4f579.webp"
+    "image": "/gallery/case_6ab4f579.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 773,
+    "aspectRatio": 1.55,
+    "orientation": "landscape"
   },
   {
     "id": "case_373843e4",
@@ -263,7 +353,12 @@
     "title": "代工列印・樣品 (PLA)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "3h 54m",
-    "image": "/gallery/case_373843e4.webp"
+    "image": "/gallery/case_373843e4.webp",
+    "isAnimated": false,
+    "width": 900,
+    "height": 1200,
+    "aspectRatio": 0.75,
+    "orientation": "portrait"
   },
   {
     "id": "case_d5e6a4bf",
@@ -277,7 +372,12 @@
     "title": "代工列印・樣品 (FLEX)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "6h 24m",
-    "image": "/gallery/case_d5e6a4bf.webp"
+    "image": "/gallery/case_d5e6a4bf.webp",
+    "isAnimated": false,
+    "width": 900,
+    "height": 1200,
+    "aspectRatio": 0.75,
+    "orientation": "portrait"
   },
   {
     "id": "case_ec302883",
@@ -291,7 +391,12 @@
     "title": "代工列印・樣品 (FLEX)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "9h 0m",
-    "image": "/gallery/case_ec302883.webp"
+    "image": "/gallery/case_ec302883.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_14a577f5",
@@ -305,7 +410,12 @@
     "title": "代工列印・樣品 (TPE80A)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "9h 48m",
-    "image": "/gallery/case_14a577f5.webp"
+    "image": "/gallery/case_14a577f5.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_bd433091",
@@ -319,7 +429,12 @@
     "title": "代工列印・樣品 (TPE80A)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "12h 18m",
-    "image": "/gallery/case_bd433091.webp"
+    "image": "/gallery/case_bd433091.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_1f28b200",
@@ -333,11 +448,16 @@
     "title": "代工列印・樣品 (TPE80A)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "6h 24m",
-    "image": "/gallery/case_1f28b200.webp"
+    "image": "/gallery/case_1f28b200.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_f6e5340f",
-    "rawFilename": "代工列印-樣品-軟質-TPE80A-0.2mm-04.HEIC",
+    "rawFilename": "代工列印-樣品-軟質-TPE80A-0.2mm-04.JPG",
     "category": "代工列印",
     "style": "樣品",
     "rigidity": "軟質",
@@ -347,11 +467,16 @@
     "title": "代工列印・樣品 (TPE80A)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "9h 0m",
-    "image": "/gallery/case_f6e5340f.webp"
+    "image": "/gallery/case_f6e5340f.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_b76ff6af",
-    "rawFilename": "代工列印-樣品-軟質-TPE80A-0.2mm-05.HEIC",
+    "rawFilename": "代工列印-樣品-軟質-TPE80A-0.2mm-05.JPG",
     "category": "代工列印",
     "style": "樣品",
     "rigidity": "軟質",
@@ -361,35 +486,12 @@
     "title": "代工列印・樣品 (TPE80A)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "11h 30m",
-    "image": "/gallery/case_b76ff6af.webp"
-  },
-  {
-    "id": "case_0259ec30",
-    "rawFilename": "代工列印-樣品-軟質-TPE80A-0.2mm-06.JPG",
-    "category": "代工列印",
-    "style": "樣品",
-    "rigidity": "軟質",
-    "material": "TPE80A",
-    "layerHeight": "0.2mm",
-    "index": "06",
-    "title": "代工列印・樣品 (TPE80A)",
-    "dimensions": "140 × 90 × 75 mm",
-    "printTime": "5h 36m",
-    "image": "/gallery/case_0259ec30.webp"
-  },
-  {
-    "id": "case_aa0fc2f8",
-    "rawFilename": "代工列印-樣品-軟質-TPE80A-0.2mm-07.JPG",
-    "category": "代工列印",
-    "style": "樣品",
-    "rigidity": "軟質",
-    "material": "TPE80A",
-    "layerHeight": "0.2mm",
-    "index": "07",
-    "title": "代工列印・樣品 (TPE80A)",
-    "dimensions": "140 × 90 × 75 mm",
-    "printTime": "8h 6m",
-    "image": "/gallery/case_aa0fc2f8.webp"
+    "image": "/gallery/case_b76ff6af.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 797,
+    "aspectRatio": 1.51,
+    "orientation": "landscape"
   },
   {
     "id": "case_a307811a",
@@ -403,7 +505,12 @@
     "title": "代工列印・樣品 (TPU90A)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "9h 48m",
-    "image": "/gallery/case_a307811a.webp"
+    "image": "/gallery/case_a307811a.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_589d5ecf",
@@ -417,7 +524,12 @@
     "title": "代工列印・樣品 (TPU90A)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "12h 18m",
-    "image": "/gallery/case_589d5ecf.webp"
+    "image": "/gallery/case_589d5ecf.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_d2a0d162",
@@ -431,7 +543,12 @@
     "title": "代工列印・樣品 (TPU90A)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "6h 24m",
-    "image": "/gallery/case_d2a0d162.webp"
+    "image": "/gallery/case_d2a0d162.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_2876057d",
@@ -445,7 +562,12 @@
     "title": "代工列印・樣品 (TPU90A)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "9h 0m",
-    "image": "/gallery/case_2876057d.webp"
+    "image": "/gallery/case_2876057d.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_86c4f395",
@@ -459,7 +581,12 @@
     "title": "代工列印・樣品 (TPU90A)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "11h 30m",
-    "image": "/gallery/case_86c4f395.webp"
+    "image": "/gallery/case_86c4f395.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_9e4bcb48",
@@ -473,7 +600,12 @@
     "title": "代工列印・樣品 (TPU90A)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "5h 36m",
-    "image": "/gallery/case_9e4bcb48.webp"
+    "image": "/gallery/case_9e4bcb48.webp",
+    "isAnimated": false,
+    "width": 900,
+    "height": 1200,
+    "aspectRatio": 0.75,
+    "orientation": "portrait"
   },
   {
     "id": "case_77399ae2",
@@ -487,7 +619,12 @@
     "title": "代工列印・樣品 (TPU90A)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "8h 6m",
-    "image": "/gallery/case_77399ae2.webp"
+    "image": "/gallery/case_77399ae2.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_e462c903",
@@ -501,7 +638,12 @@
     "title": "代工列印・樣品 (TPU90A)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "10h 36m",
-    "image": "/gallery/case_e462c903.webp"
+    "image": "/gallery/case_e462c903.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 799,
+    "aspectRatio": 1.5,
+    "orientation": "landscape"
   },
   {
     "id": "case_2192b8b1",
@@ -515,7 +657,12 @@
     "title": "代工列印・樣品 (TPU90A)",
     "dimensions": "140 × 90 × 75 mm",
     "printTime": "13h 12m",
-    "image": "/gallery/case_2192b8b1.webp"
+    "image": "/gallery/case_2192b8b1.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 799,
+    "aspectRatio": 1.5,
+    "orientation": "landscape"
   },
   {
     "id": "case_fa33f213",
@@ -529,7 +676,12 @@
     "title": "小瑪利歐上色",
     "dimensions": "80 × 80 × 50 mm",
     "printTime": "2h 30m",
-    "image": "/gallery/case_fa33f213.webp"
+    "image": "/gallery/case_fa33f213.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 797,
+    "aspectRatio": 1.51,
+    "orientation": "landscape"
   },
   {
     "id": "case_408ed6c9",
@@ -543,7 +695,12 @@
     "title": "層高比較之5cm樣品圖",
     "dimensions": "80 × 80 × 50 mm",
     "printTime": "2h 30m",
-    "image": "/gallery/case_408ed6c9.webp"
+    "image": "/gallery/case_408ed6c9.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 783,
+    "aspectRatio": 1.53,
+    "orientation": "landscape"
   },
   {
     "id": "case_2ea7b272",
@@ -557,7 +714,12 @@
     "title": "自家設計・設計小物 (PETG)",
     "dimensions": "65 × 65 × 50 mm",
     "printTime": "1h 48m",
-    "image": "/gallery/case_2ea7b272.webp"
+    "image": "/gallery/case_2ea7b272.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_8152a330",
@@ -571,7 +733,12 @@
     "title": "自家設計・設計小物 (PLA)",
     "dimensions": "65 × 65 × 50 mm",
     "printTime": "2h 42m",
-    "image": "/gallery/case_8152a330.webp"
+    "image": "/gallery/case_8152a330.webp",
+    "isAnimated": false,
+    "width": 900,
+    "height": 1200,
+    "aspectRatio": 0.75,
+    "orientation": "portrait"
   },
   {
     "id": "case_fbe296c8",
@@ -585,7 +752,12 @@
     "title": "自家設計・設計小物 (PLA)",
     "dimensions": "65 × 65 × 50 mm",
     "printTime": "3h 36m",
-    "image": "/gallery/case_fbe296c8.webp"
+    "image": "/gallery/case_fbe296c8.webp",
+    "isAnimated": false,
+    "width": 900,
+    "height": 1200,
+    "aspectRatio": 0.75,
+    "orientation": "portrait"
   },
   {
     "id": "case_fb7af7f7",
@@ -599,7 +771,12 @@
     "title": "自家設計・設計小物 (PLA)",
     "dimensions": "65 × 65 × 50 mm",
     "printTime": "1h 30m",
-    "image": "/gallery/case_fb7af7f7.webp"
+    "image": "/gallery/case_fb7af7f7.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_41059855",
@@ -613,11 +790,16 @@
     "title": "自家設計・設計小物 (PLA)",
     "dimensions": "65 × 65 × 50 mm",
     "printTime": "2h 24m",
-    "image": "/gallery/case_41059855.webp"
+    "image": "/gallery/case_41059855.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_89fec815",
-    "rawFilename": "自家設計-設計小物-硬質-PLA-0.2mm-05.JPG",
+    "rawFilename": "自家設計-設計小物-硬質-PLA-0.2mm-05.jpg",
     "category": "自家設計",
     "style": "設計小物",
     "rigidity": "硬質",
@@ -627,11 +809,16 @@
     "title": "自家設計・設計小物 (PLA)",
     "dimensions": "65 × 65 × 50 mm",
     "printTime": "3h 18m",
-    "image": "/gallery/case_89fec815.webp"
+    "image": "/gallery/case_89fec815.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 683,
+    "aspectRatio": 1.76,
+    "orientation": "landscape"
   },
   {
     "id": "case_a9247244",
-    "rawFilename": "自家設計-設計小物-硬質-PLA-0.2mm-06.JPG",
+    "rawFilename": "自家設計-設計小物-硬質-PLA-0.2mm-06.gif",
     "category": "自家設計",
     "style": "設計小物",
     "rigidity": "硬質",
@@ -641,35 +828,12 @@
     "title": "自家設計・設計小物 (PLA)",
     "dimensions": "65 × 65 × 50 mm",
     "printTime": "4h 12m",
-    "image": "/gallery/case_a9247244.webp"
-  },
-  {
-    "id": "case_0e9e7931",
-    "rawFilename": "自家設計-設計小物-硬質-PLA-0.2mm-07.jpg",
-    "category": "自家設計",
-    "style": "設計小物",
-    "rigidity": "硬質",
-    "material": "PLA",
-    "layerHeight": "0.2mm",
-    "index": "07",
-    "title": "自家設計・設計小物 (PLA)",
-    "dimensions": "65 × 65 × 50 mm",
-    "printTime": "2h 6m",
-    "image": "/gallery/case_0e9e7931.webp"
-  },
-  {
-    "id": "case_d538883d",
-    "rawFilename": "自家設計-設計小物-硬質-PLA-0.2mm-08.gif",
-    "category": "自家設計",
-    "style": "設計小物",
-    "rigidity": "硬質",
-    "material": "PLA",
-    "layerHeight": "0.2mm",
-    "index": "08",
-    "title": "自家設計・設計小物 (PLA)",
-    "dimensions": "65 × 65 × 50 mm",
-    "printTime": "3h 0m",
-    "image": "/gallery/case_d538883d.webp"
+    "image": "/gallery/case_a9247244.gif",
+    "isAnimated": true,
+    "width": 900,
+    "height": 1350,
+    "aspectRatio": 0.67,
+    "orientation": "portrait"
   },
   {
     "id": "case_2e31c46d",
@@ -683,7 +847,12 @@
     "title": "自家設計・設計小物 (FLEX)",
     "dimensions": "65 × 65 × 50 mm",
     "printTime": "2h 30m",
-    "image": "/gallery/case_2e31c46d.webp"
+    "image": "/gallery/case_2e31c46d.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_2ed63114",
@@ -697,7 +866,12 @@
     "title": "自家設計・設計小物 (FLEX)",
     "dimensions": "65 × 65 × 50 mm",
     "printTime": "3h 48m",
-    "image": "/gallery/case_2ed63114.webp"
+    "image": "/gallery/case_2ed63114.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_7e9348c8",
@@ -711,7 +885,12 @@
     "title": "自家設計・設計小物 (TPE80A)",
     "dimensions": "65 × 65 × 50 mm",
     "printTime": "4h 12m",
-    "image": "/gallery/case_7e9348c8.webp"
+    "image": "/gallery/case_7e9348c8.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   },
   {
     "id": "case_99a7a58f",
@@ -725,34 +904,11 @@
     "title": "自家設計・設計小物 (TPU90A)",
     "dimensions": "65 × 65 × 50 mm",
     "printTime": "4h 12m",
-    "image": "/gallery/case_99a7a58f.webp"
-  },
-  {
-    "id": "case_fc85a556",
-    "rawFilename": "自家設計-設計小物-軟質-TPU90A-0.2mm-02.HEIC",
-    "category": "自家設計",
-    "style": "設計小物",
-    "rigidity": "軟質",
-    "material": "TPU90A",
-    "layerHeight": "0.2mm",
-    "index": "02",
-    "title": "自家設計・設計小物 (TPU90A)",
-    "dimensions": "65 × 65 × 50 mm",
-    "printTime": "5h 30m",
-    "image": "/gallery/case_fc85a556.webp"
-  },
-  {
-    "id": "case_19dfd3a5",
-    "rawFilename": "自家設計-設計小物-軟質-TPU90A-0.2mm-03.HEIC",
-    "category": "自家設計",
-    "style": "設計小物",
-    "rigidity": "軟質",
-    "material": "TPU90A",
-    "layerHeight": "0.2mm",
-    "index": "03",
-    "title": "自家設計・設計小物 (TPU90A)",
-    "dimensions": "65 × 65 × 50 mm",
-    "printTime": "2h 30m",
-    "image": "/gallery/case_19dfd3a5.webp"
+    "image": "/gallery/case_99a7a58f.webp",
+    "isAnimated": false,
+    "width": 1200,
+    "height": 900,
+    "aspectRatio": 1.33,
+    "orientation": "landscape"
   }
 ]
