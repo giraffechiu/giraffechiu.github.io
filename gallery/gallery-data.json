@@ -16,7 +16,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_1c447e50.webp"
   },
   {
     "id": "case_a426dc3c",
@@ -35,7 +36,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_a426dc3c.webp"
   },
   {
     "id": "case_d83db5d7",
@@ -54,7 +56,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_d83db5d7.webp"
   },
   {
     "id": "case_ccb2a424",
@@ -73,7 +76,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_ccb2a424.webp"
   },
   {
     "id": "case_d607057b",
@@ -92,7 +96,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_d607057b.webp"
   },
   {
     "id": "case_40f445e1",
@@ -111,7 +116,8 @@
     "width": 911,
     "height": 1200,
     "aspectRatio": 0.76,
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "thumb": "/gallery/thumbs/case_40f445e1.webp"
   },
   {
     "id": "case_7cf769c4",
@@ -130,7 +136,8 @@
     "width": 900,
     "height": 1200,
     "aspectRatio": 0.75,
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "thumb": "/gallery/thumbs/case_7cf769c4.webp"
   },
   {
     "id": "case_c20f7af8",
@@ -149,7 +156,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_c20f7af8.webp"
   },
   {
     "id": "case_2a9771cc",
@@ -168,7 +176,8 @@
     "width": 900,
     "height": 1200,
     "aspectRatio": 0.75,
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "thumb": "/gallery/thumbs/case_2a9771cc.webp"
   },
   {
     "id": "case_d20de086",
@@ -187,7 +196,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_d20de086.webp"
   },
   {
     "id": "case_17527a2c",
@@ -206,7 +216,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_17527a2c.webp"
   },
   {
     "id": "case_cdabf19e",
@@ -225,7 +236,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_cdabf19e.webp"
   },
   {
     "id": "case_d02258cb",
@@ -244,7 +256,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_d02258cb.webp"
   },
   {
     "id": "case_13f41264",
@@ -263,7 +276,8 @@
     "width": 900,
     "height": 1200,
     "aspectRatio": 0.75,
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "thumb": "/gallery/thumbs/case_13f41264.webp"
   },
   {
     "id": "case_b83da363",
@@ -282,7 +296,8 @@
     "width": 900,
     "height": 1200,
     "aspectRatio": 0.75,
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "thumb": "/gallery/thumbs/case_b83da363.webp"
   },
   {
     "id": "case_e25f558d",
@@ -301,7 +316,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_e25f558d.webp"
   },
   {
     "id": "case_f0279d9a",
@@ -320,7 +336,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_f0279d9a.webp"
   },
   {
     "id": "case_6ab4f579",
@@ -339,7 +356,8 @@
     "width": 1200,
     "height": 773,
     "aspectRatio": 1.55,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_6ab4f579.webp"
   },
   {
     "id": "case_373843e4",
@@ -358,7 +376,8 @@
     "width": 900,
     "height": 1200,
     "aspectRatio": 0.75,
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "thumb": "/gallery/thumbs/case_373843e4.webp"
   },
   {
     "id": "case_d5e6a4bf",
@@ -377,7 +396,8 @@
     "width": 900,
     "height": 1200,
     "aspectRatio": 0.75,
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "thumb": "/gallery/thumbs/case_d5e6a4bf.webp"
   },
   {
     "id": "case_ec302883",
@@ -396,7 +416,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_ec302883.webp"
   },
   {
     "id": "case_14a577f5",
@@ -415,7 +436,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_14a577f5.webp"
   },
   {
     "id": "case_bd433091",
@@ -434,7 +456,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_bd433091.webp"
   },
   {
     "id": "case_1f28b200",
@@ -453,7 +476,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_1f28b200.webp"
   },
   {
     "id": "case_f6e5340f",
@@ -472,7 +496,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_f6e5340f.webp"
   },
   {
     "id": "case_b76ff6af",
@@ -491,7 +516,8 @@
     "width": 1200,
     "height": 797,
     "aspectRatio": 1.51,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_b76ff6af.webp"
   },
   {
     "id": "case_a307811a",
@@ -510,7 +536,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_a307811a.webp"
   },
   {
     "id": "case_589d5ecf",
@@ -529,7 +556,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_589d5ecf.webp"
   },
   {
     "id": "case_d2a0d162",
@@ -548,7 +576,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_d2a0d162.webp"
   },
   {
     "id": "case_2876057d",
@@ -567,7 +596,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_2876057d.webp"
   },
   {
     "id": "case_86c4f395",
@@ -586,7 +616,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_86c4f395.webp"
   },
   {
     "id": "case_9e4bcb48",
@@ -605,7 +636,8 @@
     "width": 900,
     "height": 1200,
     "aspectRatio": 0.75,
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "thumb": "/gallery/thumbs/case_9e4bcb48.webp"
   },
   {
     "id": "case_77399ae2",
@@ -624,7 +656,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_77399ae2.webp"
   },
   {
     "id": "case_e462c903",
@@ -643,7 +676,8 @@
     "width": 1200,
     "height": 799,
     "aspectRatio": 1.5,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_e462c903.webp"
   },
   {
     "id": "case_2192b8b1",
@@ -662,7 +696,8 @@
     "width": 1200,
     "height": 799,
     "aspectRatio": 1.5,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_2192b8b1.webp"
   },
   {
     "id": "case_fa33f213",
@@ -681,7 +716,8 @@
     "width": 1200,
     "height": 797,
     "aspectRatio": 1.51,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_fa33f213.webp"
   },
   {
     "id": "case_408ed6c9",
@@ -700,7 +736,8 @@
     "width": 1200,
     "height": 783,
     "aspectRatio": 1.53,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_408ed6c9.webp"
   },
   {
     "id": "case_2ea7b272",
@@ -719,7 +756,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_2ea7b272.webp"
   },
   {
     "id": "case_8152a330",
@@ -738,7 +776,8 @@
     "width": 900,
     "height": 1200,
     "aspectRatio": 0.75,
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "thumb": "/gallery/thumbs/case_8152a330.webp"
   },
   {
     "id": "case_fbe296c8",
@@ -757,7 +796,8 @@
     "width": 900,
     "height": 1200,
     "aspectRatio": 0.75,
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "thumb": "/gallery/thumbs/case_fbe296c8.webp"
   },
   {
     "id": "case_fb7af7f7",
@@ -776,7 +816,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_fb7af7f7.webp"
   },
   {
     "id": "case_41059855",
@@ -795,7 +836,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_41059855.webp"
   },
   {
     "id": "case_89fec815",
@@ -814,7 +856,8 @@
     "width": 1200,
     "height": 683,
     "aspectRatio": 1.76,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_89fec815.webp"
   },
   {
     "id": "case_a9247244",
@@ -833,7 +876,8 @@
     "width": 900,
     "height": 1350,
     "aspectRatio": 0.67,
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "thumb": "/gallery/thumbs/case_a9247244.webp"
   },
   {
     "id": "case_2e31c46d",
@@ -852,7 +896,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_2e31c46d.webp"
   },
   {
     "id": "case_2ed63114",
@@ -871,7 +916,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_2ed63114.webp"
   },
   {
     "id": "case_7e9348c8",
@@ -890,7 +936,8 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_7e9348c8.webp"
   },
   {
     "id": "case_99a7a58f",
@@ -909,6 +956,7 @@
     "width": 1200,
     "height": 900,
     "aspectRatio": 1.33,
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "thumb": "/gallery/thumbs/case_99a7a58f.webp"
   }
 ]
